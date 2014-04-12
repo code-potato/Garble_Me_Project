@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Garble_Me</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_effects_config_scr">EffectsConfigScr</string>
+    <string name="Record">Record</string>
+    <string name="title_activity_effect_settings_scr">EffectSettingsScr</string>
+    <string name="title_activity_recording_libra_scr">RecordingLibraScr</string>
+    <string name="title_activity_about_scr">AboutScr</string>
+
+</resources>
