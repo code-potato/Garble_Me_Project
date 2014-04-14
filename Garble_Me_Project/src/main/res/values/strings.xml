@@ -9,5 +9,6 @@
     <string name="title_activity_effect_settings_scr">EffectSettingsScr</string>
     <string name="title_activity_recording_libra_scr">RecordingLibraScr</string>
     <string name="title_activity_about_scr">AboutScr</string>
+    <string name="ToggleButton">ToggleButton</string>
 
 </resources>

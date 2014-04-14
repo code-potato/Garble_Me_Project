@@ -9,7 +9,7 @@
     tools:context="com.codepotato.view.EffectsConfigScr">
 
     <TextView
-        android:text="Testing!"
+        android:text="EffectsConfig!"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

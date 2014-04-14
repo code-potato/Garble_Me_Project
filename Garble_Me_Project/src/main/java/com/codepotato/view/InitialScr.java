@@ -1,13 +1,18 @@
 package com.codepotato.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.content.Intent;
-import android.widget.ToggleButton;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.LayoutInflater;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
+import android.widget.EditText;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 public class InitialScr extends Activity {
 
@@ -15,24 +20,51 @@ public class InitialScr extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial_scr);
-    }
+        ToggleButton toggle = (ToggleButton) findViewById(R.id.recordButton);
+        toggle.setText(null);
+        toggle.setTextOn(null);
+        toggle.setTextOff(null);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // The toggle is enabled
+                    ToggleButton toggle = (ToggleButton) findViewById(R.id.recordButton);
+                    toggle.setBackgroundDrawable(getResources().getDrawable(R.drawable.done_button));
 
-    public void onToggleClicked(View view) {
-        // Is the toggle on?
-        ToggleButton Record = (ToggleButton) findViewById(R.id.recordButton);
-        boolean on = Record.isChecked();
+                } else {
+                    // The toggle is disabled
+                    ToggleButton toggle = (ToggleButton) findViewById(R.id.recordButton);
+                    toggle.setBackgroundDrawable(getResources().getDrawable(R.drawable.record_button));
 
-        if (on) {
-            Record.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = new Intent(InitialScr.this, EffectsConfigScr.class);
-                    startActivity(intent);
-                    finish();
+                    // get activity_initial_scr_prompt.xml view
+                    LayoutInflater layoutInflater = LayoutInflater.from(InitialScr.this);
+                    View promptView = layoutInflater.inflate(R.layout.activity_initial_scr_prompt, null);
+
+                    AlertDialog.Builder alert = new AlertDialog.Builder(InitialScr.this);
+                    alert.setTitle("Enter File Name:");
+                    alert.setView(promptView);
+                    final EditText input = (EditText) promptView.findViewById(R.id.userInput);
+                    alert.setCancelable(false)
+                            .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    Editable value = input.getText();
+                                    // Do something with value!
+                                    Intent intent = new Intent(InitialScr.this, EffectsConfigScr.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    // Canceled.
+                                    dialog.cancel();
+                                }
+                            });
+                    //alert.create();
+                    alert.show();
                 }
-            });
-        } else {
+            }
+        });
 
-        }
     }
 
     @Override
@@ -48,9 +80,16 @@ public class InitialScr extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.recordings:
+                intent = new Intent(InitialScr.this, RecordingLibraScr.class);
+                startActivity(intent);
+                return true;
+            case R.id.about:
+                intent = new Intent(InitialScr.this, AboutScr.class);
+                startActivity(intent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
