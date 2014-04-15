@@ -10,5 +10,6 @@
     <string name="title_activity_recording_libra_scr">RecordingLibraScr</string>
     <string name="title_activity_about_scr">AboutScr</string>
     <string name="ToggleButton">ToggleButton</string>
+    <string name="filename1">filename1</string>
 
 </resources>
