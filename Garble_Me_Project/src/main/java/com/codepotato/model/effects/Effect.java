@@ -1,4 +1,4 @@
-package com.codepotato.model;
+package com.codepotato.model.effects;
 
 /**
  * Created by michael on 4/12/14.

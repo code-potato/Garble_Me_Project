@@ -1,7 +1,5 @@
 package com.codepotato.model.effects;
 
-import  com.codepotato.model.Effect;
-
 /**
  * Created by michael on 4/11/14.
  *
@@ -9,7 +7,7 @@ import  com.codepotato.model.Effect;
  *
  */
 
-public class EchoEffect extends Effect
+public class EchoEffect extends TimeBasedEffect
 {
     private Delay delay;
     private double delayTime; // in milliseconds
