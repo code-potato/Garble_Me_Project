@@ -5,5 +5,16 @@ package com.codepotato.model;
  */
 public abstract class Effect {
 
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public abstract double tick(double inputSample);
+
 }
