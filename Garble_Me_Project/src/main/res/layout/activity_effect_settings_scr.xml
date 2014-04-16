@@ -11,6 +11,37 @@
     <TextView
         android:text="EffectSettings!"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" android:id="@+id/textView"/>
+    <SeekBar
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            android:layout_marginTop="110dp"
+            android:layout_below="@+id/textView" android:layout_alignStart="@+id/seekBar2"/>
+    <SeekBar
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar2" android:layout_below="@+id/seekBar" android:layout_alignStart="@+id/seekBar"
+            android:layout_marginTop="41dp"/>
+    <SeekBar
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar3" android:layout_below="@+id/seekBar2" android:layout_alignStart="@+id/seekBar2"
+            android:layout_marginTop="44dp"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText" android:layout_alignBottom="@+id/seekBar" android:layout_alignParentStart="true"
+            android:layout_marginLeft="31dp" android:text="Dry"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText2" android:layout_above="@+id/seekBar3" android:layout_alignStart="@+id/editText"
+            android:text="Wet"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText3" android:layout_alignBottom="@+id/seekBar3"
+            android:layout_alignStart="@+id/editText2" android:text="FeedBack"/>
 
 </RelativeLayout>
