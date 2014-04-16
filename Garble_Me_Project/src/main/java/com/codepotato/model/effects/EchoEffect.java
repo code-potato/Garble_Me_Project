@@ -1,6 +1,6 @@
 package com.codepotato.model.effects;
 
-import model.Effect;
+import  com.codepotato.model.Effect;
 
 /**
  * Created by michael on 4/11/14.
@@ -34,7 +34,7 @@ public class EchoEffect extends Effect
         delay.setFeedbackGain(feedbackGain);
     }
 
-    public double tick(Double input)
+    public double tick(double input)
     {
         return delay.tick(input);
     }
