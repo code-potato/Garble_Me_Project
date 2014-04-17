@@ -83,10 +83,8 @@ public class Player implements Runnable {
                 double sample;
                 for(int i=0; i < buff_size; i+= 2)  //increment index by two because 16bit mono sample is 2 bytes long
                 {
-                    //reads 2 bytes from stream and stores them in buff at offset i. returns number of bytes read.
-                    //if bytes are read, condition is TRUE
                     if (bis.available() > 0){
-                        bis.read(buff,i, 2);
+                        bis.read(buff,i, 2); //reads 2 bytes from stream and stores them in buff at offset i. returns number of bytes read.
                     }
                     else {
                         buff[i] = 0; buff[i+1] = 0;
