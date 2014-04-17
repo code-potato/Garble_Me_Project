@@ -5,9 +5,7 @@ package com.codepotato.model.effects;
  */
 public abstract class Effect {
 
-    final protected int sampleRate = 44100;
-
-    protected int id;
+    private int id;
 
     public int getId() {
         return id;

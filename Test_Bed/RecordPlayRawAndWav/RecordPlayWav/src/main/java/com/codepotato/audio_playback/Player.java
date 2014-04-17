@@ -5,9 +5,6 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
-import com.codepotato.AudioEffects.Delay;
-import com.codepotato.AudioEffects.DelayLine;
-import com.codepotato.AudioEffects.EchoEffect;
 
 import java.io.*;
 
