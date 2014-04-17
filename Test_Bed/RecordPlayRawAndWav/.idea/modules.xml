@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/RecordPlayRawAndWav.iml" filepath="$PROJECT_DIR$/RecordPlayRawAndWav.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RecordPlayWav/RecordPlayWav.iml" filepath="$PROJECT_DIR$/RecordPlayWav/RecordPlayWav.iml" />
+    </modules>
+  </component>
+</project>
+
