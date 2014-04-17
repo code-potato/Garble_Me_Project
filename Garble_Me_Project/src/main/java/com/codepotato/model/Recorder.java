@@ -1,4 +1,4 @@
-package com.codepotato.audio_recording;
+package com.codepotato.model;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
