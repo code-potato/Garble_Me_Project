@@ -11,5 +11,11 @@
     <string name="title_activity_about_scr">AboutScr</string>
     <string name="ToggleButton">ToggleButton</string>
     <string name="filename1">filename1</string>
-
+    <string-array name="effects_array">
+        <item>Echo</item>
+        <item>Distortion</item>
+        <item>Chorus</item>
+        <item>Flanger</item>
+        <item>Equalizer</item>
+    </string-array>
 </resources>
