@@ -21,6 +21,12 @@ public class Delay {
         delayBuf.setDelayLineDelay(newDelay);
     }
 
+    public void setDelayLineDelay(double newDelay)
+    {
+        delayBuf.setDelayLineDelay(newDelay);
+    }
+
+
     public double getDelay()
     {
         return delayBuf.getDelayLineDelay();
