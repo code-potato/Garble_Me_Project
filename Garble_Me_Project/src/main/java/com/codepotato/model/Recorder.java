@@ -25,6 +25,7 @@ public class Recorder implements Runnable{ //Runnable must be implemented for cr
     private boolean isRecording = false; //a flag for the thread to determine when to stop recording
     private static final String TEMP_FILE_NAME= "recorded_audio_file.raw"; //temp file name for initial audiofile creation. will be renamed to .wav later
     private static final String SAVED_WAV_FOLDER = "SavedWavFiles";  //where our .wav files are saved
+    private static final String SAVED_RAW_FOLDER="SavedRawFiles"; //where our .raw files are stored
     private static final String LOGTAG = "Recorder";
 
     //Audio format related variables
@@ -35,9 +36,9 @@ public class Recorder implements Runnable{ //Runnable must be implemented for cr
 
     /**
      *
-     * @param filepath the file path of the apps sandboxed directory. Can be retrieved via context.getFilesDir in
-     *                 an Activity Class using this.getFilesDir();
-     * @see android.content.Context.getFilesDir();
+     * @param filepath the file path of the apps sandboxed directory. Can be retrieved via Context.getFilesDir in
+     *                 an Activity Class using the this.getFilesDir() method
+     * @see android.content.Context
      */
     public Recorder(File filepath){
 
@@ -53,7 +54,7 @@ public class Recorder implements Runnable{ //Runnable must be implemented for cr
     }
 
     /**
-     * Starts recording audio and saves it to temp file .
+     * Starts recording audio and saves it to temp file.
      *
      */
     public void start(){
@@ -140,6 +141,19 @@ public class Recorder implements Runnable{ //Runnable must be implemented for cr
     }
 
     /**
+     * Saves the recorded audio file to the dir app sandbox root/SavedRawFiles/ dir
+     * @param fileName User defined name of audio file
+     */
+    public File save(String fileName){
+        fileName.concat(".raw"); //adding the .raw file extension to the file name
+        File completeSavePath= new File(this.getSavedRawDirectory(), fileName);
+
+        rawAudioFile.renameTo(completeSavePath);
+
+        return completeSavePath;
+    }
+
+    /**
      * Not Yet finished
      * @param waveFileNameString
      */
@@ -203,9 +217,13 @@ public class Recorder implements Runnable{ //Runnable must be implemented for cr
         return folder;
     }
 
-    private void deleteTempRawFile() {
-        rawAudioFile.delete();
+    private File getSavedRawDirectory(){
+        File folder= new File(filepath, SAVED_RAW_FOLDER);
+        if(!folder.exists())
+            folder.mkdir();
+        return folder;
     }
+
 
     /**
      * NOT YET COMPLETED

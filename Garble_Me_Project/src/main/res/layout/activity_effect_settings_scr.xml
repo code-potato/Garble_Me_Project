@@ -40,31 +40,44 @@
             android:text="Dry"
             android:layout_alignParentStart="true"
             android:layout_alignBottom="@+id/seekBar" android:layout_alignTop="@+id/seekBar"
-            android:layout_alignEnd="@+id/editText2"/>
+            android:layout_alignEnd="@+id/editText2" android:editable="false"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/editText2"
             android:text="Wet"
-            android:layout_alignBottom="@+id/seekBar2" android:layout_alignParentStart="true"/>
+            android:layout_alignBottom="@+id/seekBar2" android:layout_alignParentStart="true" android:editable="false"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/editText3"
             android:text="FeedBack"
-            android:layout_alignBottom="@+id/seekBar3" android:layout_alignParentStart="true"/>
+            android:layout_alignBottom="@+id/seekBar3" android:layout_alignParentStart="true" android:editable="true"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/editText4"
             android:text="Delays"
             android:layout_below="@+id/seekBar3" android:layout_alignParentStart="true"
-            android:layout_marginTop="60dp"/>
+            android:layout_marginTop="60dp" android:editable="false"/>
     <Spinner
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/spinner"
-            android:spinnerMode="dropdown" android:textAlignment="center"
+            android:textAlignment="center"
             android:gravity="top" android:layout_alignStart="@+id/seekBar"/>
+    <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/spinner"
+            android:layout_alignParentEnd="true" android:layout_alignBottom="@+id/seekBar4"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:id="@+id/effectSaveButton" android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
