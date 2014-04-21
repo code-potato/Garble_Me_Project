@@ -10,6 +10,8 @@ class SinWave {
     double initialPhase; // initial phase phi
     double sampleRate;
 
+    double out; // declared as instance variable for efficiency.
+
     public SinWave(){
         currTimeIndex = 0;
         frequency = 440;
@@ -52,8 +54,7 @@ class SinWave {
     }
 
     double tick(){
-        double out;
-        out = Math.sin(2.*Math.PI*frequency*((double)currTimeIndex/sampleRate) + initialPhase);
+        out = Math.sin(2.*3.14*frequency*((double)currTimeIndex/sampleRate) + initialPhase);
         currTimeIndex++;
         return out;
     }
