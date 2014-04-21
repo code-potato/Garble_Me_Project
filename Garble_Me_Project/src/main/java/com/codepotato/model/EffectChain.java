@@ -7,42 +7,47 @@ import java.util.*;
  * Created by David on 4/16/2014.
  */
 
-//def chainsize 10
-
 public class EffectChain {
 
+    private static int id_count = 0; //used to set unique ID for effect
     private ArrayList<Effect> effectList;
     private int numOfEffects;
-
 
     public EffectChain(){
         effectList = new ArrayList<Effect>();
         numOfEffects = 0;
     }
 
-    public void addEffect(Effect eff){ //to end of array list
-        effectList.add(eff);
-        numOfEffects++;
+    public int getNumOfEffects(){ //we may never use this...?
+        return numOfEffects;
     }
 
-    //NOTE: //effect ids are arbitrary as long as each effect has a unique id
-    public void removeEffect (int effID){
+    public int addEffect(Effect eff){ //to end of array list
+        eff.setId(id_count);  //effect ids are arbitrary as long as each effect has a unique id
+        effectList.add(eff);
+
+        id_count++;
+        numOfEffects++;
+
+        return eff.getId();
+    }
+
+    //RETURN TYPE: boolean, used to check if effect ID was removed or not
+    public boolean removeEffect (int effID){
 
         boolean idFound = false; //check for exception (id does not exist)
         for(int i=0; i<effectList.size(); i++){
             if(effectList.get(i).getId() == effID){
-                effectList.set(i, null); //remove()
+                effectList.remove(i); //remove effect from chain/list
                 numOfEffects--;
-                idFound = true;
+                idFound = true; //effID has been found, and effect has been dealt with
                 break;
             }
         }
 
-        //went though entire effect list, didn't find effID
-        //should never bump into this error during app run
-        if(!idFound){
-            System.out.println("Error: Effect ID not found.");
-        }
+        // if didn't find effID -> idFound = false
+        // else idFound = true (set during search in effect chain)
+        return idFound;
     }
 
     /* this remove function is for manually deleting an effect from its index in list
@@ -51,12 +56,29 @@ public class EffectChain {
             System.out.println("Error: Array out of bounds");
         }
         else{
-            effectList.set(index,null); //remove()
+            effectList.remove(index); //remove()
             numOfEffects--;
         }
     }
 
     */
+
+    public Effect getEffect(int effID){
+
+        Effect temp;
+
+        for(int i=0; i<effectList.size(); i++){
+            temp = effectList.get(i);
+            if(temp.getId() == effID){
+                return temp; //return effectList.get(i);
+            }
+        }
+        //went though entire effect list, didn't find effID
+        //should never bump into this error during app run
+        return null;
+    }
+
+    /*  this get function is for manually getting an effect from its index in list
     public Effect getEffect(int index){
         if(index >= numOfEffects){
             //index over array size
@@ -68,12 +90,10 @@ public class EffectChain {
             return effectList.get(index);
         }
     }
+    */
 
     public double tickAll(double input) {
         for(Effect eff : effectList){
-            if(eff == null){
-                continue;
-            }
             input = eff.tick(input);
         }
         return input;
