@@ -13,34 +13,40 @@ public class AudioController {
     private Player audioPlayer;
     private EffectChain effectChain;
 
+    /* AudioController: creates new instance of Player and EffectChain */
     public AudioController(File filename){
+
+        effectChain = EffectChainFactory.initEffectChain(); //new EffectChain(filename);
+
         try {
-            audioPlayer = new Player(filename);
+            initPlayer(filename);
         }catch(Exception IOException){
-            System.out.println("ERROR: File does not exist!");
+            System.out.println("ERROR: File does not exist!"); //choose another file? how to do this in Android?
         }
-//        effectChain = new EffectChain(filename);  //TO DO: MAKE EFFECTCHAINFACTORY FOR SINGLETON OBJECT SHARING
     }
 
-    public void addEffect(Effect eff){
-        effectChain.addEffect(eff);
+    public void initPlayer(File filename) throws IOException{
+        audioPlayer = new Player(filename); //(re)initializes player with a File
+        effectChain.deleteAllEffects();     //(re)"initializes" effectChain
     }
 
-    public void removeEffect(int effID){
-        effectChain.removeEffect(effID);
+    public int addEffect(Effect eff){
+        return effectChain.addEffect(eff);
     }
+
+    public boolean removeEffect(int effID){
+        return effectChain.removeEffect(effID); //returns true if effect's ID has been found
+    }                                           // with effect being removed
 
     public void play(){
         audioPlayer.play();
     }
 
     public void pause(){
-        audioPlayer.pause();;
+        audioPlayer.pause();
     }
 
     public boolean isPlaying(){
         return audioPlayer.isPlaying();
     }
-
-
 }
