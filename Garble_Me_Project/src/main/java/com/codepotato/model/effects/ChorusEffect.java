@@ -10,6 +10,8 @@ public class ChorusEffect extends TimeBasedEffect
     private double depth; // 0-50 ms
     private double rate; // 0-5 hz
 
+    private double tempDelay; // setting as an instance variable for efficiency reasons.
+
     public ChorusEffect()
     {
         rate = 2;
@@ -33,9 +35,8 @@ public class ChorusEffect extends TimeBasedEffect
 
     @Override
     public double tick(double inputSample) {
-        double tempDelay = depth/2*(sin.tick()+1)+minDelay;
-        tempDelay = convertMilliSecsToSamples(tempDelay);
-        delay.setDelayLineDelay(tempDelay);
+        tempDelay = depth/2. * (sin.tick() + 1.) + minDelay;
+        delay.setDelayLineDelay(tempDelay * sampleRate / 1000.);
         return delay.tick(inputSample);
     }
 

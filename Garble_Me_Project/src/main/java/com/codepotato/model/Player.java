@@ -4,7 +4,6 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
-import com.codepotato.model.effects.EchoEffect;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,14 +15,13 @@ public class Player implements Runnable{
 
     SampleReader sampleReader;
     private byte[] buff;
+    EffectChain effectChain;
 
     private AudioTrack track;
     private Thread audioThread;
 
     private static final String LOG_TAG= "XPlayer";
 
-    // test stuff //
-    EchoEffect echo;
 
     public Player(File audioFile) throws IOException {
 
@@ -39,16 +37,8 @@ public class Player implements Runnable{
         track = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,
                 AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
                 32000, AudioTrack.MODE_STREAM);
-        audioThread= new Thread(this, "Player: Audio Playback Thread");
 
-
-        // test stuff //
-        echo = new EchoEffect();
-        echo.setFeedbackGain(.3);
-        echo.setDelayTime(500);
-        echo.setWetGain(.3);
-        echo.setDryGain(1.);
-
+        effectChain = EffectChainFactory.initEffectChain();
     }
 
     public boolean isPlaying(){
@@ -56,6 +46,8 @@ public class Player implements Runnable{
     }
 
     public void play() {
+        // create and run new thread for playback
+        audioThread= new Thread(this, "Player: Audio Playback Thread");
         audioThread.start(); //executes the code in the Player.run() method
     }
 
@@ -74,15 +66,14 @@ public class Player implements Runnable{
 
         while(isPlaying){
             try {
-                //fill buffer with bytes from file reader
-                double sample;
 
+                double sample;
+                //fill buffer with bytes from sampleReader
                 for(int i=0; i < buff_size; i+= 2)  //increment index by two because 16bit mono sample is 2 bytes long
                 {
                     sample = sampleReader.nextSample();
 
-                    //sample = effectChain.tickAll(sample);
-                    sample = echo.tick(sample);
+                    sample = effectChain.tickAll(sample);
 
                     sampleReader.sampleToBytes(sample, buff, i);
                 }
@@ -98,7 +89,13 @@ public class Player implements Runnable{
 
     public void pause() {
         Log.d("player", "pause");
+
+        track.pause();
         isPlaying = false;
+
+        // kill playback thread
+        audioThread.interrupt();
+        audioThread = null;
     }
 
 }
