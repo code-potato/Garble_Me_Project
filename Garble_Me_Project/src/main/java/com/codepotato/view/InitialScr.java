@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -23,7 +22,7 @@ import java.io.File;
 
 public class InitialScr extends Activity {
 
-    public static final String LOG_TAG= "CodePotatoAudioRecordingTest"; //for debugging purposes
+    public static final String LOG_TAG = "CodePotatoAudioRecordingTest"; //for debugging purposes
     private Recorder recorder;
 
     private TextView textTimer;
@@ -34,20 +33,21 @@ public class InitialScr extends Activity {
 
     /**
      * This function is called upon a The Record button press in the main view. This is the insertion point
+     *
      * @param view is passed implicitly by the GUI.
      */
-    public void toggleRecording(View view){
-        ToggleButton recordToggle= (ToggleButton) view;
+    public void toggleRecording(View view) {
+        ToggleButton recordToggle = (ToggleButton) view;
 
 
         //Start Recording is pressed
-        if(recordToggle.isChecked()){
+        if (recordToggle.isChecked()) {
             recordToggle.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.done_button)); //changes the buttons background image
             startRecording();
 
         }
         //Stop Recording is pressed
-        else{
+        else {
             recordToggle.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.record_button));//changes the button background image
             stopRecording();
 
@@ -55,10 +55,10 @@ public class InitialScr extends Activity {
 
     }
 
-    public void startRecording(){
+    public void startRecording() {
 
-        File filepath= this.getFilesDir();  //returns us the root of the apps private sandboxed directory
-        recorder= new Recorder(filepath);
+        File filepath = this.getFilesDir();  //returns us the root of the apps private sandboxed directory
+        recorder = new Recorder(filepath);
         recorder.start();
 
         //Starts the Stopwatch/Timer
@@ -69,7 +69,7 @@ public class InitialScr extends Activity {
 
     }
 
-    public void stopRecording(){
+    public void stopRecording() {
         recorder.stop();
 
         myHandler.removeCallbacks(updateTimer); //stops the timer
@@ -119,7 +119,9 @@ public class InitialScr extends Activity {
         //return value.toString();
     }
 
-    /** switches to a different view/activity after recording has finished     */
+    /**
+     * switches to a different view/activity after recording has finished
+     */
     private void prepareToSwitchViews(String filepath) {
 
         //In order to switch Activity/view, you must use an Intent
@@ -132,13 +134,12 @@ public class InitialScr extends Activity {
         startActivity(intent);
 
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial_scr);
         textTimer = (TextView) findViewById(R.id.stopwatch);
-
-
     }
 
     @Override
