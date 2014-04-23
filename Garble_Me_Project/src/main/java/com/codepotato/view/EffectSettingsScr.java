@@ -23,7 +23,6 @@ public class EffectSettingsScr extends Activity {
         spinner.setAdapter(adapter);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 

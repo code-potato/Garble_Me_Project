@@ -80,17 +80,18 @@ public class InitialScr extends Activity {
 
                     //IF THE USER CLICKED ON SAVE BUTTON
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        String filename = new String();
+                        String filename = String.valueOf(input.getText());
                         while (filename.isEmpty()) {
+                            Toast.makeText(InitialScr.this, "You need to enter a file name!", Toast.LENGTH_SHORT).show();
                             filename = String.valueOf(input.getText());
-                            if (filename.isEmpty())
-                                Toast.makeText(InitialScr.this, "You need to enter a file name!", Toast.LENGTH_SHORT).show();
-                            Toast.makeText(InitialScr.this, "The file name is: " + filename, Toast.LENGTH_SHORT).show();
                         }
-                        Log.d(LOG_TAG, "The Value is: " + filename);
-                        File namedAudioFile = recorder.save(filename);
-                        textTimer.setText("00:00");
-                        prepareToSwitchViews(namedAudioFile.toString()); //a method defined in this activity.
+                        if (!filename.isEmpty()) {
+                            Toast.makeText(InitialScr.this, "The file name is: " + filename, Toast.LENGTH_SHORT).show();
+                            Log.d(LOG_TAG, "The file name is: " + filename);
+                            File namedAudioFile = recorder.save(filename);
+                            textTimer.setText("00:00");
+                            prepareToSwitchViews(namedAudioFile.toString()); //a method defined in this activity.
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
