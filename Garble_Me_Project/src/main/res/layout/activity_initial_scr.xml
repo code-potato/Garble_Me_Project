@@ -14,10 +14,10 @@
             android:id="@+id/recordButton"
             android:checked="false"
             android:layout_gravity="center"
-            android:layout_marginBottom="109dp"
-            android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+            android:layout_marginBottom="78dp"
             android:background="@drawable/record_button" android:textOff=" " android:textOn=" "
-            android:onClick="toggleRecording"/>
+            android:onClick="toggleRecording" android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

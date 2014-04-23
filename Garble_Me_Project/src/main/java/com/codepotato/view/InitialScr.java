@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 import com.codepotato.model.Recorder;
 
@@ -24,64 +24,49 @@ public class InitialScr extends Activity {
 
     public static final String LOG_TAG = "CodePotatoAudioRecordingTest"; //for debugging purposes
     private Recorder recorder;
-
     private TextView textTimer;
     private long startTime = 0L;
     private Handler myHandler = new Handler();
     long elapsedTime = 0L;
 
-
     /**
-     * This function is called upon a The Record button press in the main view. This is the insertion point
+     * This function is called when the Record button is pressed in the main view. This is the insertion point
      *
      * @param view is passed implicitly by the GUI.
      */
     public void toggleRecording(View view) {
         ToggleButton recordToggle = (ToggleButton) view;
 
-
         //Start Recording is pressed
         if (recordToggle.isChecked()) {
             recordToggle.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.done_button)); //changes the buttons background image
             startRecording();
-
         }
         //Stop Recording is pressed
         else {
             recordToggle.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.record_button));//changes the button background image
             stopRecording();
-
         }
-
     }
 
     public void startRecording() {
-
         File filepath = this.getFilesDir();  //returns us the root of the apps private sandboxed directory
         recorder = new Recorder(filepath);
         recorder.start();
-
         //Starts the Stopwatch/Timer
         elapsedTime = 0L;
         startTime = SystemClock.uptimeMillis();
         myHandler.postDelayed(updateTimer, 1000);
-
-
     }
 
     public void stopRecording() {
         recorder.stop();
-
         myHandler.removeCallbacks(updateTimer); //stops the timer
-
         promptUserForSaveFileName();//prompts user for File Name via an Alert Dialogue box.
-
     }
-
 
     private void promptUserForSaveFileName() {
 
-        //EditText value;
         // get activity_initial_scr_prompt.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View promptView = layoutInflater.inflate(R.layout.activity_initial_scr_prompt, null);
@@ -95,18 +80,21 @@ public class InitialScr extends Activity {
 
                     //IF THE USER CLICKED ON SAVE BUTTON
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        Editable value = input.getText();
-
-                        Log.d(LOG_TAG, "The Value is: " + value.toString());
-                        File namedAudioFile = recorder.save(value.toString()); //TODO-senatori refactor this to somewhere more intuitive
+                        String filename = new String();
+                        while (filename.isEmpty()) {
+                            filename = String.valueOf(input.getText());
+                            if (filename.isEmpty())
+                                Toast.makeText(InitialScr.this, "You need to enter a file name!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(InitialScr.this, "The file name is: " + filename, Toast.LENGTH_SHORT).show();
+                        }
+                        Log.d(LOG_TAG, "The Value is: " + filename);
+                        File namedAudioFile = recorder.save(filename);
                         textTimer.setText("00:00");
                         prepareToSwitchViews(namedAudioFile.toString()); //a method defined in this activity.
-
-
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    //if the User clicked on the cancel button
+                    // If the User clicked on the cancel button
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Canceled.
                         dialog.cancel();
@@ -114,17 +102,14 @@ public class InitialScr extends Activity {
                     }
                 });
         alert.show();
-
-        //Log.d(LOG_TAG, "The Value in EditText is: " + value.toString());
-        //return value.toString();
     }
 
     /**
-     * switches to a different view/activity after recording has finished
+     * Switches to a different view/activity after recording has finished
      */
     private void prepareToSwitchViews(String filepath) {
 
-        //In order to switch Activity/view, you must use an Intent
+        // In order to switch Activity/view, you must use an Intent
         Intent intent = new Intent(this, EffectsConfigScr.class);//this is the current context, PlaySound.class is the activity we want to switch to
 
         intent.putExtra("FILEPATH", filepath);//a hash...read bellow
@@ -169,7 +154,9 @@ public class InitialScr extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    // A stopwatch thread for the audio recording.
+    /**
+     * A stopwatch thread for the audio recording.
+     */
     private Runnable updateTimer = new Runnable() {
 
         public void run() {
