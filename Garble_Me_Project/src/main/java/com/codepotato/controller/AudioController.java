@@ -1,7 +1,11 @@
 package com.codepotato.controller;
 
-import com.codepotato.model.*;
-import com.codepotato.model.effects.*;
+
+
+import com.codepotato.model.EffectChain;
+import com.codepotato.model.EffectChainFactory;
+import com.codepotato.model.Player;
+import com.codepotato.model.effects.Effect;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,10 +42,6 @@ public class AudioController {
         return effectChain.removeEffect(effID); //returns true if effect's ID has been found
     }                                           // with effect being removed
 
-    public Effect getEffect(int effID){
-        return effectChain.getEffect(effID);
-    }
-
     public void play(){
         audioPlayer.play();
     }
@@ -52,5 +52,9 @@ public class AudioController {
 
     public boolean isPlaying(){
         return audioPlayer.isPlaying();
+    }
+
+    public void returnPlayerToBeginning() throws IOException {
+        audioPlayer.seekToBeginning();
     }
 }

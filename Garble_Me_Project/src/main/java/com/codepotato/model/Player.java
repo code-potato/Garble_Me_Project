@@ -98,4 +98,9 @@ public class Player implements Runnable{
         audioThread = null;
     }
 
+    public void seekToBeginning() throws IOException {
+        sampleReader.seek(0);
+        track.flush();
+    }
+
 }
