@@ -54,6 +54,10 @@ public class AudioController {
         return audioPlayer.isPlaying();
     }
 
+    public void seekPlayer(int location) throws IOException {
+        audioPlayer.seek(location);
+    }
+
     public void returnPlayerToBeginning() throws IOException {
         audioPlayer.seekToBeginning();
     }

@@ -23,6 +23,7 @@ public class SampleReader
     public SampleReader (File file, int sampleRate, int bitRate, int numChan) throws IOException
     {
         audioFile = file;
+
         this.sampleRate = sampleRate;
         bitResolution = bitRate;
         numChannels = numChan;
@@ -31,6 +32,10 @@ public class SampleReader
         inputStream = new BufferedInputStream(fis);
 
         byteBuff = new byte[2];
+    }
+
+    public long length() {
+        return audioFile.length();
     }
 
     public int available() throws IOException {
@@ -83,6 +88,4 @@ public class SampleReader
 
         inputStream.skip(offset);
     }
-
-
 }

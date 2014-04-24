@@ -98,6 +98,13 @@ public class Player implements Runnable{
         audioThread = null;
     }
 
+    // offset should be between 0 and 100
+    public void seek(int location) throws IOException {
+        long offset = (long) (sampleReader.length() * (location/100.));
+        sampleReader.seek(offset);
+        track.flush();
+    }
+
     public void seekToBeginning() throws IOException {
         sampleReader.seek(0);
         track.flush();
