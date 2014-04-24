@@ -24,6 +24,7 @@ public class InitialScr extends Activity {
 
     public static final String LOG_TAG = "CodePotatoAudioRecordingTest"; //for debugging purposes
     private Recorder recorder;
+    private File audioFile;
     private TextView textTimer;
     private long startTime = 0L;
     private Handler myHandler = new Handler();
@@ -77,20 +78,19 @@ public class InitialScr extends Activity {
         final EditText input = (EditText) promptView.findViewById(R.id.userInput);
         alert.setCancelable(false)
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-
                     //IF THE USER CLICKED ON SAVE BUTTON
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String filename = String.valueOf(input.getText());
-                        while (filename.isEmpty()) {
-                            Toast.makeText(InitialScr.this, "You need to enter a file name!", Toast.LENGTH_SHORT).show();
-                            filename = String.valueOf(input.getText());
-                        }
-                        if (!filename.isEmpty()) {
+                        if (filename.isEmpty()) {
+                            Toast.makeText(InitialScr.this, "You need to enter a file name!", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                            promptUserForSaveFileName();
+                        } else {
                             Toast.makeText(InitialScr.this, "The file name is: " + filename, Toast.LENGTH_SHORT).show();
                             Log.d(LOG_TAG, "The file name is: " + filename);
-                            File namedAudioFile = recorder.save(filename);
+                            audioFile = recorder.save(filename);
                             textTimer.setText("00:00");
-                            prepareToSwitchViews(namedAudioFile.toString()); //a method defined in this activity.
+                            prepareToSwitchViews(audioFile.toString()); //a method defined in this activity.
                         }
                     }
                 })
@@ -112,8 +112,7 @@ public class InitialScr extends Activity {
 
         // In order to switch Activity/view, you must use an Intent
         Intent intent = new Intent(this, EffectsConfigScr.class);//this is the current context, PlaySound.class is the activity we want to switch to
-
-        intent.putExtra("FILEPATH", filepath);//a hash...read bellow
+        intent.putExtra("AUDIOFILEPATH", filepath);//a hash...read bellow
         /* An Intent can carry a payload of various data types as key-value pairs called extras.
         The putExtra() method takes the key name in the first arg and the value in the second arg
          */
