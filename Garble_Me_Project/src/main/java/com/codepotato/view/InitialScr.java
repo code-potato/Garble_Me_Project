@@ -47,7 +47,7 @@ public class InitialScr extends Activity {
         }
     }
 
-    public void startRecording() {
+    private void startRecording() {
         File filepath = this.getFilesDir();  //returns us the root of the apps private sandboxed directory
         recorder = new Recorder(filepath);
         recorder.start();
@@ -57,7 +57,7 @@ public class InitialScr extends Activity {
         myHandler.postDelayed(updateTimer, 1000);
     }
 
-    public void stopRecording() {
+    private void stopRecording() {
         recorder.stop();
         myHandler.removeCallbacks(updateTimer); //stops the timer
         promptUserForSaveFileName();//prompts user for File Name via an Alert Dialogue box.
@@ -89,7 +89,12 @@ public class InitialScr extends Activity {
                             Log.d(LOG_TAG, "The file name is: " + filename);
                             audioFile = recorder.save(filename);
                             textTimer.setText("00:00");
-                            prepareToSwitchViews(audioFile.toString()); //a method defined in this activity.
+                            Intent intent = new Intent(InitialScr.this, EffectsConfigScr.class);
+                            /* An Intent can carry a payload of various data types as key-value pairs called extras.
+                            The putExtra() method takes the key name in the first arg and the value in the second arg
+                            */
+                            intent.putExtra("AudioFilePath", audioFile.toString());
+                            startActivity(intent);
                         }
                     }
                 })
@@ -102,21 +107,6 @@ public class InitialScr extends Activity {
                     }
                 });
         alert.show();
-    }
-
-    /**
-     * Switches to a different view/activity after recording has finished
-     */
-    private void prepareToSwitchViews(String filepath) {
-
-        // In order to switch Activity/view, you must use an Intent
-        Intent intent = new Intent(this, EffectsConfigScr.class);//this is the current context, PlaySound.class is the activity we want to switch to
-        intent.putExtra("AUDIOFILEPATH", filepath);//a hash...read bellow
-        /* An Intent can carry a payload of various data types as key-value pairs called extras.
-        The putExtra() method takes the key name in the first arg and the value in the second arg
-         */
-        startActivity(intent);
-
     }
 
     @Override

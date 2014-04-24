@@ -14,9 +14,6 @@
     <string-array name="effects_array">
         <item>Select</item>
         <item>Echo</item>
-        <item>Distortion</item>
         <item>Chorus</item>
-        <item>Flanger</item>
-        <item>Equalizer</item>
     </string-array>
 </resources>
