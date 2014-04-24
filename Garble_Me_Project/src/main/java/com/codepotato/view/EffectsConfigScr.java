@@ -3,7 +3,6 @@ package com.codepotato.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -81,28 +80,6 @@ public class EffectsConfigScr extends Activity {
                 }
             });
         }
-        /*Button addButton = new Button(this);
-        LinearLayout.LayoutParams addParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        addParams.setMargins(150, 0, 550, 0);
-        dynamicLayout.addView(addButton, addParams);
-        addButton.setText("Effect" + i);
-        addButton.setId(i++);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Add button is clicked! " + v.getId(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        Button removeButton = new Button(this);
-        LinearLayout.LayoutParams removeParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        removeParams.setMargins(550, 0, 150, 0);
-        dynamicLayout.addView(removeButton, removeParams);
-        removeButton.setText("-" + i);
-        removeButton.setId(i++);
-        removeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Remove button is clicked! " + v.getId(), Toast.LENGTH_SHORT).show();
-            }
-        });*/
     }
 
     @Override
@@ -110,19 +87,9 @@ public class EffectsConfigScr extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effects_config_scr);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        /*final Button add = (Button) findViewById(R.id.addButton);
-        add.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                Intent intent = new Intent(EffectsConfigScr.this, EffectSettingsScr.class);
-                intent.putExtra("AUDIOFILEPATH", filepath);//a hash...read bellow
-                startActivity(intent);
-
-            }
-        });*/
-        // Load recorded audio file
-        //audioFile = new File(getIntent().getStringExtra("AUDIOFILEPATH"));
-        try {
+        audioFile = new File(getIntent().getStringExtra("AUDIOFILEPATH"));
+        /*try {
+            // Load recorded audio file
             filepath = this.getFilesDir() + "/emma16.raw";
             Log.d("emma16.raw", filepath);
             InputStream stream = getAssets().open("emma16.raw");
@@ -132,7 +99,7 @@ public class EffectsConfigScr extends Activity {
             //Logging exception
             Log.d("emma16.raw", "Error loading test file!");
 
-        }
+        }*/
         audioController = new AudioController(audioFile);
     }
 
@@ -203,6 +170,7 @@ public class EffectsConfigScr extends Activity {
                 startActivity(intent);
                 return true;
             case android.R.id.home:
+                audioController = null;
                 this.finish();
                 return true;
         }
