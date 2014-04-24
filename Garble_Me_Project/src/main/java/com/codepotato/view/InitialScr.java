@@ -8,10 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,11 +79,13 @@ public class InitialScr extends Activity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String filename = String.valueOf(input.getText());
                         if (filename.isEmpty()) {
-                            Toast.makeText(InitialScr.this, "You need to enter a file name!", Toast.LENGTH_LONG).show();
+                            Toast toast = Toast.makeText(InitialScr.this, "You need to enter a file name!", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
                             dialog.dismiss();
                             promptUserForSaveFileName();
                         } else {
-                            Toast.makeText(InitialScr.this, "The file name is: " + filename, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(InitialScr.this, "The file name is: " + filename, Toast.LENGTH_LONG).show();
                             Log.d(LOG_TAG, "The file name is: " + filename);
                             audioFile = recorder.save(filename);
                             textTimer.setText("00:00");

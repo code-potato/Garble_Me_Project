@@ -14,28 +14,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/addButton" android:gravity="top"
             android:background="@drawable/add_button" android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/playButton"/>
+            android:layout_toLeftOf="@+id/playButton" android:onClick="addButtonOnClick"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Export"
             android:id="@+id/exportButton" android:gravity="top" android:layout_alignBottom="@+id/addButton"
             android:layout_toRightOf="@+id/playButton" android:layout_alignParentTop="true"/>
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Effect"
-            android:id="@+id/effectButton" android:textStyle="bold"
-            android:textAlignment="center"
-            android:layout_marginTop="69dp"
-            android:layout_below="@+id/exportButton" android:layout_alignStart="@+id/addButton"/>
-    <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="-"
-            android:id="@+id/removeButton"
-            android:layout_alignTop="@+id/effectButton" android:layout_alignEnd="@+id/exportButton"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,5 +49,19 @@
             android:background="@drawable/play_button"
             android:checked="false" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
             android:gravity="bottom"/>
+    <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/addButton" android:layout_above="@+id/filenameText"
+            android:layout_alignParentEnd="true">
+
+        <TableLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/tableDynamic">
+        </TableLayout>
+    </ScrollView>
 
 </RelativeLayout>

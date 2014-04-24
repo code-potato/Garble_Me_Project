@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
-import android.widget.ToggleButton;
+import android.widget.*;
 import com.codepotato.controller.AudioController;
 
 import java.io.*;
@@ -22,6 +21,7 @@ public class EffectsConfigScr extends Activity {
     private File audioFile;
     private String filepath;
     private boolean isAudioPlaying = false;
+    private int i = 0;
 
     /**
      * This function is called when the Play button is pressed in the view.
@@ -43,20 +43,83 @@ public class EffectsConfigScr extends Activity {
         }
     }
 
+    // Create dynamic buttons
+    public void addButtonOnClick(View V) {
+        TableLayout dynamicLayout = (TableLayout) findViewById(R.id.tableDynamic);
+        int buttonsInRow = 0;
+        int numRows = dynamicLayout.getChildCount();
+        TableRow row = null;
+        if (numRows > 0) {
+            row = (TableRow) dynamicLayout.getChildAt(numRows - 1);
+            buttonsInRow = row.getChildCount();
+        }
+        if (numRows == 0 || buttonsInRow == 2) {
+            row = new TableRow(this);
+            TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(150, 5, 150, 0);
+            dynamicLayout.addView(row, params);
+            row.setGravity(Gravity.CENTER);
+            buttonsInRow = 0;
+        }
+        if (buttonsInRow < 2) {
+            Button addButton = new Button(this);
+            row.addView(addButton, 500, 100);
+            addButton.setText("Effect" + i);
+            addButton.setId(i++);
+            addButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Add button is clicked! " + v.getId(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            Button removeButton = new Button(this);
+            row.addView(removeButton, 300, 100);
+            removeButton.setText("-" + i);
+            removeButton.setId(i++);
+            removeButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Remove button is clicked! " + v.getId(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        /*Button addButton = new Button(this);
+        LinearLayout.LayoutParams addParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        addParams.setMargins(150, 0, 550, 0);
+        dynamicLayout.addView(addButton, addParams);
+        addButton.setText("Effect" + i);
+        addButton.setId(i++);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Add button is clicked! " + v.getId(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        Button removeButton = new Button(this);
+        LinearLayout.LayoutParams removeParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        removeParams.setMargins(550, 0, 150, 0);
+        dynamicLayout.addView(removeButton, removeParams);
+        removeButton.setText("-" + i);
+        removeButton.setId(i++);
+        removeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Remove button is clicked! " + v.getId(), Toast.LENGTH_SHORT).show();
+            }
+        });*/
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effects_config_scr);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        Button add = (Button) findViewById(R.id.addButton);
+        /*final Button add = (Button) findViewById(R.id.addButton);
         add.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 Intent intent = new Intent(EffectsConfigScr.this, EffectSettingsScr.class);
                 intent.putExtra("AUDIOFILEPATH", filepath);//a hash...read bellow
                 startActivity(intent);
+
             }
-        });
+        });*/
         // Load recorded audio file
         //audioFile = new File(getIntent().getStringExtra("AUDIOFILEPATH"));
         try {
@@ -71,7 +134,6 @@ public class EffectsConfigScr extends Activity {
 
         }
         audioController = new AudioController(audioFile);
-
     }
 
     private void InputStreamToFile(InputStream is, File file) {
