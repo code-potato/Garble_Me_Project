@@ -1,12 +1,16 @@
 package com.codepotato.view;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -47,6 +51,8 @@ public class EffectSettingsScr extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effect_settings_scr);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        Fragment fragment = new EchoFragment();
+        replaceFragment(fragment);
         spinner = (Spinner) findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.effects_array, android.R.layout.simple_spinner_item);
@@ -54,6 +60,26 @@ public class EffectSettingsScr extends Activity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // When a drop-down menu item is selected
+                String fragmentClassName = spinner.getSelectedItem().toString() + "Fragment";
+                try {
+                    Fragment fragment = (Fragment) (Class.forName("com.codepotato.view." + fragmentClassName)).newInstance();
+                    Log.d(InitialScr.LOG_TAG, "com.codepotato.view." + fragmentClassName + " is created!");
+                    replaceFragment(fragment);
+                } catch (Exception e) {
+                    Log.d(InitialScr.LOG_TAG, "com.codepotato.view." + fragmentClassName + " didn't get created!");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // When nothing is selected
+            }
+
+        });
         effectsList = new HashMap<String, String>();
         effectsList.put("Echo", "EchoEffect");
         effectsList.put("Chorus", "ChorusEffect");
@@ -64,6 +90,14 @@ public class EffectSettingsScr extends Activity {
                 saveEffect();
             }
         });
+
+    }
+
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.fragmentContainer, fragment);
+        transaction.commit();
     }
 
     @Override
