@@ -20,7 +20,8 @@ public class EffectsConfigScr extends Activity {
     private File audioFile;
     private String filepath;
     private boolean isAudioPlaying = false;
-    static final int PICK_EFFECT_REQUEST = 1;  // The request code
+    static final int ADD_EFFECT_REQUEST = 1;  // The request code
+    SeekBar audioPlayerBar;
 
     /**
      * This function is called when the Play button is pressed in the view.
@@ -42,27 +43,57 @@ public class EffectsConfigScr extends Activity {
         }
     }
 
-    // Create dynamic buttons
     public void addButtonOnClick(View V) {
         Intent intent = new Intent(EffectsConfigScr.this, EffectSettingsScr.class);
-        startActivityForResult(intent, PICK_EFFECT_REQUEST);
-        Log.d(InitialScr.LOG_TAG, "Start!");
+        startActivityForResult(intent, ADD_EFFECT_REQUEST);
+    }
+
+    public void restartButtonOnClick(View V) {
+        try {
+            audioController.returnPlayerToBeginning();
+        } catch (IOException e) {
+            Log.d(InitialScr.LOG_TAG, "Audio controller can't be restarted!");
+        }
+    }
+
+    public void initAudioPlayerBar() {
+        // Seekbar for the audio player
+        audioPlayerBar = (SeekBar) findViewById(R.id.audioPlayerBar);
+        audioPlayerBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progressChanged = 0;
+
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progressChanged = progress;
+            }
+
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Toast.makeText(EffectsConfigScr.this, "Audio Player Bar Progress:" + progressChanged,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(InitialScr.LOG_TAG, "Return!");
-        if (requestCode == PICK_EFFECT_REQUEST) {
+        if (requestCode == ADD_EFFECT_REQUEST) {
             if (resultCode == RESULT_OK) {
                 createButtons(data);
             }
             if (resultCode == RESULT_CANCELED) {
                 //Write your code if there's no result
+                Log.d(InitialScr.LOG_TAG, "No effect ID is returned!");
             }
         }
     }//onActivityResult
 
+    // Create dynamic buttons
     public void createButtons(Intent intent) {
+        String effectName = intent.getStringExtra("AudioEffectName");
         int effectID = Integer.parseInt(intent.getStringExtra("AudioEffectID"));
+        Log.d("AudioEffectID:", intent.getStringExtra("AudioEffectID"));
         TableLayout dynamicLayout = (TableLayout) findViewById(R.id.tableDynamic);
         int buttonsInRow = 0;
         int numRows = dynamicLayout.getChildCount();
@@ -82,12 +113,12 @@ public class EffectsConfigScr extends Activity {
         if (buttonsInRow < 2) {
             Button effectButton = new Button(this);
             row.addView(effectButton, 300, 100);
-            effectButton.setText("Effect" + effectID);
+            effectButton.setText(effectName + " " + effectID);
             effectButton.setGravity(Gravity.CENTER);
             effectButton.setId(effectID);
             effectButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Effect button" + v.getId() + " is clicked! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Effect button" + v.getId() + " is pressed! ", Toast.LENGTH_SHORT).show();
                 }
             });
             Button removeButton = new Button(this);
@@ -96,14 +127,13 @@ public class EffectsConfigScr extends Activity {
             removeButton.setId(effectID);
             removeButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Remove button" + v.getId() + " is clicked! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Remove button" + v.getId() + " is pressed! ", Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effects_config_scr);
@@ -123,6 +153,7 @@ public class EffectsConfigScr extends Activity {
         TextView fileNameText = (TextView) findViewById(R.id.filenameText);
         fileNameText.setText("Filename: " + audioFile.getName());
         audioController = new AudioController(audioFile);
+        initAudioPlayerBar();
     }
 
     private void InputStreamToFile(InputStream is, File file) {
@@ -193,11 +224,18 @@ public class EffectsConfigScr extends Activity {
                 return true;
             case android.R.id.home:
                 audioController.pause();
-                Log.d(InitialScr.LOG_TAG, "Audio controller stopped!");
+                Log.d(InitialScr.LOG_TAG, "Audio controller is stopped!");
                 this.finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        // do something on back.
+        audioController.pause();
+        Log.d(InitialScr.LOG_TAG, "Audio controller is stopped!");
+        this.finish();
+    }
 }

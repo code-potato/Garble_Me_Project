@@ -19,7 +19,7 @@ import java.io.File;
 
 public class InitialScr extends Activity {
 
-    public static final String LOG_TAG = "CodePotatoAudioRecordingTest"; //for debugging purposes
+    public static final String LOG_TAG = "CodePotato"; //for debugging purposes
     private Recorder recorder;
     private File audioFile;
     private TextView textTimer;

@@ -27,20 +27,21 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="myaudiofile.wav"
             android:id="@+id/filenameText"
-            android:layout_above="@+id/seekBar" android:layout_centerHorizontal="true"
-            android:layout_marginBottom="63dp"/>
+            android:layout_above="@+id/audioPlayerBar" android:layout_centerHorizontal="true"/>
     <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/seekBar" android:layout_above="@+id/playButton" android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"/>
+            android:id="@+id/audioPlayerBar"
+            android:layout_above="@+id/playButton" android:layout_alignParentStart="true"
+            android:layout_marginBottom="44dp" android:layout_alignEnd="@+id/scrollView"/>
     <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Restart"
             android:id="@+id/restartButton"
-            android:gravity="bottom" android:layout_alignParentBottom="true" android:layout_alignParentStart="true"/>
+            android:gravity="bottom" android:layout_alignParentBottom="true" android:layout_alignParentStart="true"
+            android:onClick="restartButtonOnClick"/>
     <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
