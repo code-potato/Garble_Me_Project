@@ -1,0 +1,38 @@
+<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:gravity="clip_horizontal">
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/delay"
+            android:text="Delay" android:editable="false"
+            android:layout_alignParentTop="true" android:layout_alignParentStart="true"
+            android:layout_marginTop="51dp"/>
+    <SeekBar android:layout_width="267dp" android:layout_height="wrap_content" android:id="@+id/delayBar"
+             android:layout_alignBottom="@+id/delay"
+             android:layout_alignParentEnd="true" android:layout_alignStart="@+id/wetBar"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/wet"
+              android:text="Wet" android:editable="false"
+              android:layout_alignBottom="@+id/wetBar" android:layout_alignParentStart="true"/>
+    <SeekBar android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/wetBar"
+             android:layout_marginBottom="70dp"
+             android:layout_above="@+id/dryBar"
+             android:layout_alignParentEnd="true" android:layout_alignStart="@+id/dryBar"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/dry"
+              android:text="Dry"
+              android:editable="false"
+              android:layout_below="@+id/wetBar" android:layout_alignParentStart="true"/>
+    <SeekBar android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/dryBar"
+             android:layout_above="@+id/feedBack"
+             android:layout_marginBottom="93dp"
+             android:layout_alignParentEnd="true" android:layout_toRightOf="@+id/feedBack"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/feedBack"
+              android:text="FeedBack"
+              android:editable="false"
+              android:layout_alignTop="@+id/feedbackBar" android:layout_alignParentStart="true"/>
+    <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/feedbackBar"
+             android:layout_marginBottom="49dp"
+             android:layout_alignParentBottom="true"
+             android:layout_alignParentEnd="true" android:layout_toRightOf="@+id/feedBack"/>
+</RelativeLayout>
