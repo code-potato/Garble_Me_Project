@@ -93,6 +93,9 @@ public class EffectSettingsScr extends Activity {
 
     }
 
+    /* Change the parameter sliders while user
+     * changes the drop-down menu item.
+     */
     public void replaceFragment(Fragment fragment) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
