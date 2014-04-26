@@ -1,15 +1,17 @@
 package com.codepotato.view;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.*;
 import com.codepotato.model.effects.Effect;
 
 import java.util.HashMap;
@@ -34,11 +36,17 @@ public class EffectSettingsScr extends Activity {
                 returnIntent.putExtra("AudioEffectName", spinner.getSelectedItem().toString());
                 returnIntent.putExtra("AudioEffectID", effectID.toString());
                 setResult(RESULT_OK, returnIntent);
+                Toast toast = Toast.makeText(EffectSettingsScr.this, "The effect is saved!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
             } else {
                 setResult(RESULT_CANCELED, returnIntent);
             }
         } catch (Exception e) {
             Log.d(InitialScr.LOG_TAG, "com.codepotato.model.effects." + effectClassName + " didn't get created!");
+            Toast toast = Toast.makeText(EffectSettingsScr.this, "The effect is not saved!", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
         }
     }
 
@@ -47,6 +55,9 @@ public class EffectSettingsScr extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effect_settings_scr);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        // Load the default guide fragment
+        Fragment fragment = new SelectFragment();
+        replaceFragment(fragment);
         spinner = (Spinner) findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.effects_array, android.R.layout.simple_spinner_item);
@@ -54,16 +65,53 @@ public class EffectSettingsScr extends Activity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // When a drop-down menu item is selected
+                String fragmentClassName = spinner.getSelectedItem().toString() + "Fragment";
+                try {
+                    Fragment fragment = (Fragment) (Class.forName("com.codepotato.view." + fragmentClassName)).newInstance();
+                    Log.d(InitialScr.LOG_TAG, "com.codepotato.view." + fragmentClassName + " is created!");
+                    replaceFragment(fragment);
+                } catch (Exception e) {
+                    Log.d(InitialScr.LOG_TAG, "com.codepotato.view." + fragmentClassName + " error!");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // When nothing is selected
+            }
+
+        });
         effectsList = new HashMap<String, String>();
         effectsList.put("Echo", "EchoEffect");
         effectsList.put("Chorus", "ChorusEffect");
         final Button saveButton = (Button) findViewById(R.id.saveButton);
+        String id = getIntent().getStringExtra("EffectID");
+        if (id != null) {
+            effectID = Integer.parseInt(id);
+            //EffectsConfigScr.audioController
+        }
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 saveEffect();
             }
         });
+
+    }
+
+    /* Change the parameter sliders while user
+     * changes the drop-down menu item.
+     */
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.fragmentContainer, fragment);
+        transaction.commit();
     }
 
     @Override

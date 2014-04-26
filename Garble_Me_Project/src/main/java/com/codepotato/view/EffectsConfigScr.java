@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.*;
 import com.codepotato.controller.AudioController;
 
@@ -57,7 +54,7 @@ public class EffectsConfigScr extends Activity {
     }
 
     public void initAudioPlayerBar() {
-        // Seekbar for the audio player
+        // SeekBar for the audio player
         audioPlayerBar = (SeekBar) findViewById(R.id.audioPlayerBar);
         audioPlayerBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
@@ -71,7 +68,7 @@ public class EffectsConfigScr extends Activity {
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(EffectsConfigScr.this, "Audio Player Bar Progress:" + progressChanged,
+                Toast.makeText(EffectsConfigScr.this, "Audio Player Bar Progress: " + progressChanged,
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -111,23 +108,31 @@ public class EffectsConfigScr extends Activity {
             buttonsInRow = 0;
         }
         if (buttonsInRow < 2) {
-            Button effectButton = new Button(this);
+            final Button effectButton = new Button(this);
             row.addView(effectButton, 300, 100);
-            effectButton.setText(effectName + " " + effectID);
+            effectButton.setText(effectName);
             effectButton.setGravity(Gravity.CENTER);
             effectButton.setId(effectID);
             effectButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Toast.makeText(getApplicationContext(), "Effect button" + v.getId() + " is pressed! ", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(EffectsConfigScr.this, EffectSettingsScr.class);
+                    intent.putExtra("EffectID", effectButton.getId());
+                    startActivity(intent);
                 }
             });
-            Button removeButton = new Button(this);
+            final Button removeButton = new Button(this);
             row.addView(removeButton);
             removeButton.setBackground(this.getResources().getDrawable(R.drawable.remove_button));
             removeButton.setId(effectID);
             removeButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Remove button" + v.getId() + " is pressed! ", Toast.LENGTH_SHORT).show();
+                    ViewGroup layout = (ViewGroup) removeButton.getParent();
+                    layout.removeView(removeButton);
+                    layout.removeView(effectButton);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Effect button is removed! ", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
                 }
             });
         }
@@ -223,8 +228,12 @@ public class EffectsConfigScr extends Activity {
                 startActivity(intent);
                 return true;
             case android.R.id.home:
-                audioController.pause();
-                Log.d(InitialScr.LOG_TAG, "Audio controller is stopped!");
+                try {
+                    audioController.pause();
+                    Log.d(InitialScr.LOG_TAG, "Audio controller is stopped!");
+                } catch (Exception e) {
+                    Log.d(InitialScr.LOG_TAG, "Audio controller throws an exception!");
+                }
                 this.finish();
                 return true;
         }
@@ -234,8 +243,12 @@ public class EffectsConfigScr extends Activity {
     @Override
     public void onBackPressed() {
         // do something on back.
-        audioController.pause();
-        Log.d(InitialScr.LOG_TAG, "Audio controller is stopped!");
+        try {
+            audioController.pause();
+            Log.d(InitialScr.LOG_TAG, "Audio controller is stopped!");
+        } catch (Exception e) {
+            Log.d(InitialScr.LOG_TAG, "Audio controller throws an exception!");
+        }
         this.finish();
     }
 }

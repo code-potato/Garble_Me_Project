@@ -1,0 +1,44 @@
+<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:gravity="clip_horizontal">
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rate"
+            android:text="Rate" android:editable="false" android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" android:layout_marginTop="36dp"/>
+    <SeekBar android:layout_width="267dp" android:layout_height="wrap_content" android:id="@+id/rateBar"
+             android:layout_alignBottom="@+id/rate" android:layout_alignStart="@+id/depthBar"
+             android:layout_alignParentEnd="true"/>
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/depth"
+            android:text="Depth" android:editable="false" android:layout_alignBottom="@+id/depthBar"
+            android:layout_alignParentStart="true"/>
+    <SeekBar android:layout_width="267dp" android:layout_height="wrap_content" android:id="@+id/depthBar"
+             android:layout_above="@+id/wetBar" android:layout_alignStart="@+id/wetBar"
+             android:layout_marginBottom="79dp" android:layout_alignParentEnd="true"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/wet"
+              android:text="Wet" android:editable="false"
+              android:layout_alignTop="@+id/wetBar" android:layout_alignParentStart="true"/>
+    <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/wetBar"
+             android:layout_centerVertical="true" android:layout_alignStart="@+id/dryBar"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/dry"
+              android:text="Dry"
+              android:editable="false" android:layout_alignTop="@+id/dryBar" android:layout_alignParentStart="true"/>
+    <SeekBar android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/dryBar"
+             android:layout_above="@+id/feedBack"
+             android:layout_marginBottom="57dp" android:layout_alignParentEnd="true"
+             android:layout_toRightOf="@+id/feedBack"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/feedBack"
+              android:text="FeedBack"
+              android:editable="false"
+              android:layout_alignParentBottom="true" android:layout_alignParentStart="true"
+              android:layout_marginBottom="66dp"/>
+    <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/feedbackBar"
+             android:layout_alignTop="@+id/feedBack" android:layout_alignParentEnd="true"
+             android:layout_alignBottom="@+id/feedBack" android:layout_toRightOf="@+id/feedBack"/>
+</RelativeLayout>
