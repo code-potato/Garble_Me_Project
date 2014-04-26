@@ -38,6 +38,10 @@ public class AudioController {
         return effectChain.addEffect(eff);
     }
 
+    public Effect getEffect(int id){
+        return effectChain.getEffect(id);
+    }
+
     public boolean removeEffect(int effID){
         return effectChain.removeEffect(effID); //returns true if effect's ID has been found
     }                                           // with effect being removed
