@@ -7,13 +7,11 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.*;
 import com.codepotato.model.effects.Effect;
 
 import java.util.HashMap;
@@ -38,11 +36,17 @@ public class EffectSettingsScr extends Activity {
                 returnIntent.putExtra("AudioEffectName", spinner.getSelectedItem().toString());
                 returnIntent.putExtra("AudioEffectID", effectID.toString());
                 setResult(RESULT_OK, returnIntent);
+                Toast toast = Toast.makeText(EffectSettingsScr.this, "The effect is saved!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
             } else {
                 setResult(RESULT_CANCELED, returnIntent);
             }
         } catch (Exception e) {
             Log.d(InitialScr.LOG_TAG, "com.codepotato.model.effects." + effectClassName + " didn't get created!");
+            Toast toast = Toast.makeText(EffectSettingsScr.this, "The effect is not saved!", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
         }
     }
 
@@ -51,7 +55,8 @@ public class EffectSettingsScr extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effect_settings_scr);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        Fragment fragment = new EchoFragment();
+        // Load the default guide fragment
+        Fragment fragment = new SelectFragment();
         replaceFragment(fragment);
         spinner = (Spinner) findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -70,7 +75,8 @@ public class EffectSettingsScr extends Activity {
                     Log.d(InitialScr.LOG_TAG, "com.codepotato.view." + fragmentClassName + " is created!");
                     replaceFragment(fragment);
                 } catch (Exception e) {
-                    Log.d(InitialScr.LOG_TAG, "com.codepotato.view." + fragmentClassName + " didn't get created!");
+                    Log.d(InitialScr.LOG_TAG, "com.codepotato.view." + fragmentClassName + " error!");
+                    e.printStackTrace();
                 }
             }
 
@@ -84,6 +90,11 @@ public class EffectSettingsScr extends Activity {
         effectsList.put("Echo", "EchoEffect");
         effectsList.put("Chorus", "ChorusEffect");
         final Button saveButton = (Button) findViewById(R.id.saveButton);
+        String id = getIntent().getStringExtra("EffectID");
+        if (id != null) {
+            effectID = Integer.parseInt(id);
+            //EffectsConfigScr.audioController
+        }
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click

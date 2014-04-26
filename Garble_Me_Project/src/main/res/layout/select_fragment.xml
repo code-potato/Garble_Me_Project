@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView android:layout_width="match_parent" android:layout_height="97dp"
+              android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/guide"
+              android:gravity="center" android:textAlignment="center"
+              android:text="Please SELECT an effect from the drop-down menu above!" android:layout_alignParentTop="true"
+              android:layout_alignParentStart="true" android:layout_marginTop="48dp" android:textStyle="bold"
+              android:typeface="serif" android:editable="false"/>
+</LinearLayout>
