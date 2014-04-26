@@ -11,6 +11,8 @@ public class EchoEffect extends TimeBasedEffect
 {
     public EchoEffect()
     {
+        name = "Echo";
+
         delayTime = 200;
         wetGain = 0.8;
         dryGain = 1.0;

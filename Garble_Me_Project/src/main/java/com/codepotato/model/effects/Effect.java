@@ -8,6 +8,7 @@ public abstract class Effect {
     final protected int sampleRate = 44100;
 
     protected int id;
+    protected String name;
 
     public int getId() {
         return id;
@@ -19,4 +20,7 @@ public abstract class Effect {
 
     public abstract double tick(double inputSample);
 
+    public String getName() {
+        return name;
+    }
 }

@@ -10,10 +10,14 @@ public class ChorusEffect extends TimeBasedEffect
     private double depth; // 0-50 ms
     private double rate; // 0-5 hz
 
+    final private double MAX_DEPTH = 50;
+    final private double MAX_RATE = 5;
+
     private double tempDelay; // setting as an instance variable for efficiency reasons.
 
     public ChorusEffect()
     {
+        name = "Chorus";
         rate = 2;
         depth = 5.;
         minDelay = 35.;
@@ -40,20 +44,20 @@ public class ChorusEffect extends TimeBasedEffect
         return delay.tick(inputSample);
     }
 
-    public double getDepth() {
-        return depth;
+    public int getDepth() {
+        return (int) (depth/MAX_DEPTH*100);
     }
 
-    public void setDepth(double depth) {
-        this.depth = depth;
+    public void setDepth(int percent) {
+        depth = MAX_DEPTH * (double)percent / 100.;
     }
 
-    public double getRate() {
-        return rate;
+    public int getRate() {
+        return (int) (rate/MAX_RATE*100);
     }
 
-    public void setRate(double rate) {
-        this.rate = rate;
+    public void setRate(int percent) {
+        rate = MAX_RATE * (double)percent / 100.;
         sin.setSinFreq(rate);
     }
 }
