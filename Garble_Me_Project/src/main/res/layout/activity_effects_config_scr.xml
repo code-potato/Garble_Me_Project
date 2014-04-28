@@ -38,10 +38,10 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Restart"
             android:id="@+id/restartButton"
-            android:gravity="bottom" android:layout_alignParentBottom="true" android:layout_alignParentStart="true"
-            android:onClick="restartButtonOnClick"/>
+            android:gravity="bottom"
+            android:onClick="restartButtonOnClick" android:background="@drawable/restart_button"
+            android:layout_alignParentBottom="true" android:layout_alignParentStart="true"/>
     <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

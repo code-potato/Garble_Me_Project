@@ -68,8 +68,14 @@ public class EffectsConfigScr extends Activity {
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(EffectsConfigScr.this, "Audio Player Bar Progress: " + progressChanged,
-                        Toast.LENGTH_SHORT).show();
+                try {
+                    audioController.returnPlayerToBeginning();
+                    audioController.seekPlayer(progressChanged);
+                    Toast.makeText(EffectsConfigScr.this, "Audio Player Bar Progress: " + progressChanged,
+                            Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -88,8 +94,8 @@ public class EffectsConfigScr extends Activity {
 
     // Create dynamic buttons
     public void createButtons(Intent intent) {
-        String effectName = intent.getStringExtra("AudioEffectName");
-        int effectID = Integer.parseInt(intent.getStringExtra("AudioEffectID"));
+        final int effectID = Integer.parseInt(intent.getStringExtra("AudioEffectID"));
+        String effectName = audioController.getEffect(effectID).getName();
         Log.d("AudioEffectID:", intent.getStringExtra("AudioEffectID"));
         TableLayout dynamicLayout = (TableLayout) findViewById(R.id.tableDynamic);
         int buttonsInRow = 0;
@@ -115,9 +121,9 @@ public class EffectsConfigScr extends Activity {
             effectButton.setId(effectID);
             effectButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Effect button" + v.getId() + " is pressed! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Effect button is pressed! ", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(EffectsConfigScr.this, EffectSettingsScr.class);
-                    intent.putExtra("EffectID", effectButton.getId());
+                    intent.putExtra("EffectID", String.valueOf(effectButton.getId()));
                     startActivity(intent);
                 }
             });
@@ -130,7 +136,8 @@ public class EffectsConfigScr extends Activity {
                     ViewGroup layout = (ViewGroup) removeButton.getParent();
                     layout.removeView(removeButton);
                     layout.removeView(effectButton);
-                    Toast toast = Toast.makeText(getApplicationContext(), "Effect button is removed! ", Toast.LENGTH_SHORT);
+                    audioController.removeEffect(effectID);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Effect is removed! ", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 }
@@ -143,9 +150,10 @@ public class EffectsConfigScr extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effects_config_scr);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        // Load recorded audio file
         audioFile = new File(getIntent().getStringExtra("AudioFilePath"));
+        // Use test audio file from assets instead
         /*try {
-            // Load recorded audio file
             filepath = this.getFilesDir() + "/emma16.raw";
             Log.d("emma16.raw", filepath);
             InputStream stream = getAssets().open("emma16.raw");
