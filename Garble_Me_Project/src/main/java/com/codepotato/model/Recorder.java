@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 /**
  * Encapsulates an AudioRecord instance so it runs in its own recordingThread. None of the main AudioRecord methods are
  *
- * from this object.
+ * accessible from this object.
  *
  * @author Steven Senatori on 3/22/14.
  */
@@ -38,7 +38,7 @@ public class Recorder implements Runnable{ //Runnable must be implemented for cr
      *
      * @param filepath the file path of the apps sandboxed directory. Can be retrieved via Context.getFilesDir in
      *                 an Activity Class using the this.getFilesDir() method
-     * @see android.content.Context
+     * @see android.content.Context.getFilesDir();
      */
     public Recorder(File filepath){
 
@@ -142,7 +142,8 @@ public class Recorder implements Runnable{ //Runnable must be implemented for cr
 
     /**
      * Saves the recorded audio file to the dir app sandbox root/SavedRawFiles/ dir
-     * @param fileName User defined name of audio file
+     * @param fileName String containing the name of audio file
+     * @return File containing the full path of the
      */
     public File save(String fileName){
         fileName.concat(".raw"); //adding the .raw file extension to the file name
@@ -153,69 +154,7 @@ public class Recorder implements Runnable{ //Runnable must be implemented for cr
         return completeSavePath;
     }
 
-    /**
-     * Not Yet finished
-     * @param waveFileNameString
-     */
-    public void convertToWavFile(String waveFileNameString){
 
-        FileInputStream raw_in;
-        FileOutputStream wav_out;
-        int totalAudioLen;
-        int totalDataLen;
-        //int longSampleRate = RECORDER_SAMPLERATE; //WAV Header info requires Long datatype?
-        int channels = 1; //we're recording in mono
-        int recorderBitsPerSample;
-
-        //this if statement is just for the sake of coding defensively.
-        if(RECORDER_ENCODING== AudioFormat.ENCODING_PCM_16BIT)
-            recorderBitsPerSample = 16;
-        else if (RECORDER_ENCODING== AudioFormat.ENCODING_PCM_8BIT)
-            recorderBitsPerSample = 8;
-
-        int byteRate = recorderBitsPerSample * RECORDER_SAMPLERATE * channels/8; //(bits per sample * Samples per second * channels) / 8 = bytes per second
-        byte data_buffer[] = new byte[minBufferSizeInBytes];
-        int bytesRead = 0;
-        int byteCountOffset = 0;
-
-        File wavFile = new File(getWavDirectory(), waveFileNameString);
-
-        try {
-            raw_in= new FileInputStream(rawAudioFile);
-            wav_out= new FileOutputStream(wavFile);
-
-            insertWaveFileHeader();
-            //------------------------
-
-            while(raw_in.read(data_buffer) != -1){ //FileInputStream.read returns -1 if end of stream is reached
-                wav_out.write(data_buffer);
-
-            }
-            raw_in.close();
-            wav_out.close();
-
-        } catch (FileNotFoundException fnfe) {
-            Log.e(LOGTAG, "Something went wrong with finding or creating a file");
-            Log.e(LOGTAG, Log.getStackTraceString(fnfe));
-        } catch (IOException ioe) {
-            Log.e(LOGTAG, "Something went wrong with writing wav file");
-            Log.e(LOGTAG, Log.getStackTraceString(ioe));
-        }
-
-    }
-
-    /**
-     * Retrieves the dir/path used to store wav files
-     * @return
-     */
-    private File getWavDirectory() {
-
-        File folder= new File(filepath, SAVED_WAV_FOLDER);
-        if (!folder.exists())
-            folder.mkdir();
-
-        return folder;
-    }
 
     private File getSavedRawDirectory(){
         File folder= new File(filepath, SAVED_RAW_FOLDER);
@@ -223,15 +162,5 @@ public class Recorder implements Runnable{ //Runnable must be implemented for cr
             folder.mkdir();
         return folder;
     }
-
-
-    /**
-     * NOT YET COMPLETED
-     */
-    private void insertWaveFileHeader() {
-
-    }
-
-
 
 }
