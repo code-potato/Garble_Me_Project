@@ -6,6 +6,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import com.codepotato.model.Recorder;
 import com.codepotato.model.effects.EchoEffect;
 import com.codepotato.model.SampleReader;
 import com.codepotato.model.EffectChain;
@@ -30,6 +31,34 @@ public class FileManager {
     public FileManager() {
         effectChain= EffectChainFactory.initEffectChain();
         effectChain.addEffect(new EchoEffect());
+    }
+
+    /**
+     * Retrieves the list of recorded raw files
+     * @param appContext an instance of the Application context. Can be retrieved by Context.getApplicationContext in a
+     *                   GUI Activity Class via this.getApplicationContext.
+     * @return File[] an array of File objects
+     */
+    public File[] listRawFiles(Context appContext){
+        //Log.d(LOGTAG, "about to List files");
+        File searchDir = new File(appContext.getFilesDir(), Recorder.SAVED_RAW_FOLDER);
+        appContext= null;
+        //Log.d(LOGTAG, "Search Dir: " + searchDir.toString());
+        File fileList[]= searchDir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String filename) {
+                return filename.endsWith(".raw");
+            }
+        });
+        //File fileList[] = searchDir.listFiles();
+
+        /*Log.d(LOGTAG, "fileList size: "+ Integer.toString(fileList.length)+ " STRING: " + fileList.toString());
+        for(File file_iterator: fileList){
+            Log.d(LOGTAG, file_iterator.getName());
+        }*/
+
+
+        return fileList;
     }
 
     /**
@@ -126,8 +155,8 @@ public class FileManager {
         FileOutputStream wav_out;
 
         byte data_buffer[] = new byte[BUFF_SIZE];
-        //int bytesRead = 0;
-        //int byteCountOffset = 0;
+        int bytesRead = 0;
+        int byteCountOffset = 0;
         long sampleCounter=0; //FOR DEBUGING PURPOSES
         boolean comparison= false;
 
@@ -160,7 +189,7 @@ public class FileManager {
                     //TODO-senatori The eof heuristic based code should probably be moved to another function for readability
                     //int comparison= Double.compare(0.0, sample); //if sample is equal to 0.0, it could be eof
                     comparison= Math.abs(sample)< 1E-8 ;
-                    if(comparison){ //so we check that there's been at least 120 consecutive values less then 1E-8, which isnt zero but inaudible
+                    if(comparison){ //so we check that there's been at least 20 consecutive zeros
                         zeroCounter++;
                     }
                     else

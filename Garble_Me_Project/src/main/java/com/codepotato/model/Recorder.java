@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 /**
  * Encapsulates an AudioRecord instance so it runs in its own recordingThread. None of the main AudioRecord methods are
  *
- * accessible from this object.
+ * from this object.
  *
  * @author Steven Senatori on 3/22/14.
  */
@@ -25,7 +25,7 @@ public class Recorder implements Runnable{ //Runnable must be implemented for cr
     private boolean isRecording = false; //a flag for the thread to determine when to stop recording
     private static final String TEMP_FILE_NAME= "recorded_audio_file.raw"; //temp file name for initial audiofile creation. will be renamed to .wav later
     private static final String SAVED_WAV_FOLDER = "SavedWavFiles";  //where our .wav files are saved
-    private static final String SAVED_RAW_FOLDER="SavedRawFiles"; //where our .raw files are stored
+    public static final String SAVED_RAW_FOLDER="SavedRawFiles"; //where our .raw files are stored
     private static final String LOGTAG = "Recorder";
 
     //Audio format related variables
@@ -38,7 +38,7 @@ public class Recorder implements Runnable{ //Runnable must be implemented for cr
      *
      * @param filepath the file path of the apps sandboxed directory. Can be retrieved via Context.getFilesDir in
      *                 an Activity Class using the this.getFilesDir() method
-     * @see android.content.Context.getFilesDir();
+     * @see //android.content.Context.getFilesDir();
      */
     public Recorder(File filepath){
 
@@ -146,7 +146,7 @@ public class Recorder implements Runnable{ //Runnable must be implemented for cr
      * @return File containing the full path of the
      */
     public File save(String fileName){
-        fileName.concat(".raw"); //adding the .raw file extension to the file name
+        fileName = fileName.concat(".raw"); //adding the .raw file extension to the file name
         File completeSavePath= new File(this.getSavedRawDirectory(), fileName);
 
         rawAudioFile.renameTo(completeSavePath);
