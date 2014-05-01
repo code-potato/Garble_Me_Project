@@ -85,6 +85,11 @@ public class SampleReader
 
     public void seek(long offset) throws IOException {
         /* note this may not be the most effecient way to do this */
+
+        // since samples are two bytes, the offset must be even.
+        if (offset % 2 == 1)
+            offset--;
+
         //reinitialize stream
         fis = new FileInputStream(audioFile);
         inputStream = new BufferedInputStream(fis);

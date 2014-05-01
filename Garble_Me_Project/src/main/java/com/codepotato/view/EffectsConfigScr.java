@@ -69,7 +69,6 @@ public class EffectsConfigScr extends Activity {
 
             public void onStopTrackingTouch(SeekBar seekBar) {
                 try {
-                    audioController.returnPlayerToBeginning();
                     audioController.seekPlayer(progressChanged);
                     Toast.makeText(EffectsConfigScr.this, "Audio Player Bar Progress: " + progressChanged,
                             Toast.LENGTH_SHORT).show();
