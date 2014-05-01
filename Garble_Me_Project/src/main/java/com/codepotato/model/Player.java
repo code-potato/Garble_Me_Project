@@ -110,4 +110,20 @@ public class Player implements Runnable{
         track.flush();
     }
 
+    /**
+     * Returns length of current audio track in seconds
+     * @return
+     */
+    public int audioLength(){
+        return Math.round(sampleReader.length() / 2 / 44100);
+    }
+
+    /**
+     * @return current position of playback in percent
+     * from 0-100
+     */
+    public int currPositionPercent(){
+        return Math.round(sampleReader.getPosition() / sampleReader.length() * 100);
+    }
+
 }

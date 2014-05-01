@@ -65,4 +65,21 @@ public class AudioController {
     public void returnPlayerToBeginning() throws IOException {
         audioPlayer.seekToBeginning();
     }
+
+    /**
+     * @return length of current audio track, in seconds
+     */
+    public int audioLength()
+    {
+        return audioPlayer.audioLength();
+    }
+
+    /**
+     * @return current position of playback in percent
+     * from 0-100
+     */
+    public int currPosition(){
+        return audioPlayer.currPositionPercent();
+    }
+
 }

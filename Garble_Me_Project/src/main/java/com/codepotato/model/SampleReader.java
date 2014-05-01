@@ -19,6 +19,7 @@ public class SampleReader
     private FileInputStream fis;
     private BufferedInputStream inputStream;
     private byte[] byteBuff;
+    private long position;
 
     public SampleReader (File file, int sampleRate, int bitRate, int numChan) throws IOException
     {
@@ -30,6 +31,8 @@ public class SampleReader
 
         fis = new FileInputStream(audioFile);
         inputStream = new BufferedInputStream(fis);
+
+        position = 0;
 
         byteBuff = new byte[2];
     }
@@ -46,6 +49,7 @@ public class SampleReader
     {
         if (inputStream.available() > 0){
             inputStream.read(byteBuff, 0, 2); //returns -1 end of stream. Not doing anything with this.
+            position += 2;
         }
         else {
             byteBuff[0] = 0; byteBuff[1] = 0;
@@ -81,11 +85,15 @@ public class SampleReader
 
     public void seek(long offset) throws IOException {
         /* note this may not be the most effecient way to do this */
-
         //reinitialize stream
         fis = new FileInputStream(audioFile);
         inputStream = new BufferedInputStream(fis);
 
         inputStream.skip(offset);
+        position = offset;
+    }
+
+    public long getPosition(){
+        return position;
     }
 }
