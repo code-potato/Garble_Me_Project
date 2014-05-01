@@ -78,7 +78,7 @@ public class AudioController {
      * @return current position of playback in percent
      * from 0-100
      */
-    public int currPosition(){
+    public int currAudioPosition(){
         return audioPlayer.currPositionPercent();
     }
 
