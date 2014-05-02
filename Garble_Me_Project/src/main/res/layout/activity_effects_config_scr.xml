@@ -33,7 +33,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/audioPlayerBar"
             android:layout_above="@+id/playButton" android:layout_alignParentStart="true"
-            android:layout_marginBottom="44dp" android:layout_alignEnd="@+id/scrollView"/>
+            android:layout_marginBottom="44dp" android:layout_alignEnd="@+id/scrollView"
+            android:progressDrawable="@drawable/audio_player_bar_progress"
+            android:thumb="@drawable/audio_player_bar_thumb"/>
     <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"

@@ -22,10 +22,10 @@ public class EffectsConfigScr extends Activity {
     public static AudioController audioController;
     private File audioFile;
     private String filepath;
-    private boolean isAudioPlaying = false;
     static final int ADD_EFFECT_REQUEST = 1;  // The request code
     SeekBar audioPlayerBar;
     private FileManager fileManager;
+    ToggleButton playToggle;
     private Handler myHandler = new Handler();
 
     /**
@@ -34,16 +34,16 @@ public class EffectsConfigScr extends Activity {
      * @param view is passed implicitly by the GUI.
      */
     public void togglePlaying(View view) {
-        ToggleButton playToggle = (ToggleButton) view;
+        playToggle = (ToggleButton) view;
 
         // Is audio playing?
         if (playToggle.isChecked()) {
-            playToggle.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.pause_button)); //changes the buttons background image
             startPlayingAudio();
+            playToggle.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.pause_button)); //changes the buttons background image
             Toast.makeText(EffectsConfigScr.this, "Start playing audio!", Toast.LENGTH_SHORT).show();
         } else {
-            playToggle.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.play_button)); //changes the buttons background image
             stopPlayingAudio();
+            playToggle.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.play_button)); //changes the buttons background image
             Toast.makeText(EffectsConfigScr.this, "Stop playing audio!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -104,6 +104,7 @@ public class EffectsConfigScr extends Activity {
     public void restartButtonOnClick(View V) {
         try {
             audioController.returnPlayerToBeginning();
+            audioPlayerBar.setProgress(audioController.currAudioPosition());
         } catch (IOException e) {
             Log.d(InitialScr.LOG_TAG, "Audio player can't be restarted!");
         }
@@ -260,13 +261,11 @@ public class EffectsConfigScr extends Activity {
 
     public void startPlayingAudio() {
         audioController.play();
-        isAudioPlaying = audioController.isPlaying();
-        myHandler.postDelayed(updateAudioPlayerBar, 1000);
+        myHandler.postDelayed(updateAudioPlayerBar, 5);
     }
 
     public void stopPlayingAudio() {
         audioController.pause();
-        isAudioPlaying = audioController.isPlaying();
         myHandler.removeCallbacks(updateAudioPlayerBar); //stops the seekBar update
     }
 
@@ -327,7 +326,19 @@ public class EffectsConfigScr extends Activity {
             audioPlayerBar.setProgress(audioController.currAudioPosition());
             Log.d(InitialScr.LOG_TAG, "Audio controller position:" + audioController.currAudioPosition());
             Log.d(InitialScr.LOG_TAG, "Audio controller audio length:" + audioController.audioLength());
-            myHandler.postDelayed(this, 1000);
+            if (audioController.isPlaying() && audioController.currAudioPosition() == 100) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                stopPlayingAudio();
+                playToggle.setChecked(false);
+                playToggle.setBackgroundDrawable(playToggle.getContext().getResources().getDrawable(R.drawable.play_button)); //changes the buttons background image
+                Toast.makeText(EffectsConfigScr.this, "Stop playing audio!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            myHandler.postDelayed(this, 5);
         }
     };
 }
