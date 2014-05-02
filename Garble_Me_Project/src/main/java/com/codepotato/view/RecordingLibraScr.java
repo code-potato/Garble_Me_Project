@@ -23,10 +23,7 @@ public class RecordingLibraScr extends Activity {
     String recordingsList[]; //String based list of the files
     File recordingFiles[];
     int selectedFileIndex; //will contain index/id of the selected listview element
-    // The list of recordings
-    //List<Map<String, String>> recordingsList = new ArrayList<Map<String, String>>();
-    // This is the Adapter being used to display the list's data
-    //SimpleAdapter Adapter;
+
     ArrayAdapter<String> arrayAdapter;
 
     @Override
@@ -34,7 +31,7 @@ public class RecordingLibraScr extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recording_libra_scr);
 
-        //initList();
+
         recordingsList= fileManager.listRawFiles(this.getApplicationContext()); //retrieves the list of raw file names
         recordingFiles= fileManager.getRawFiles(this.getApplicationContext()); //gets a list of raw files form recording manager
         // We get the ListView component from the layout
