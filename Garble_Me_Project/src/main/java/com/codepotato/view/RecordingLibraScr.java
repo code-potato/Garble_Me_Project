@@ -22,6 +22,7 @@ public class RecordingLibraScr extends Activity {
     FileManager fileManager= new FileManager();
     String recordingsList[]; //String based list of the files
     File recordingFiles[];
+    int selectedFileIndex; //will contain index/id of the selected listview element
     // The list of recordings
     //List<Map<String, String>> recordingsList = new ArrayList<Map<String, String>>();
     // This is the Adapter being used to display the list's data
@@ -50,13 +51,12 @@ public class RecordingLibraScr extends Activity {
                 Log.d(LOGTAG, "id: "+ Long.toString(id));
             }
         });
-        // an adapter is(in this case) simply an array wrapper for the ListView that creates an view for each element
+        // an adapter is(in this case) simply an array wrapper for the ListView that creates a view for each element
         arrayAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, recordingsList);
-      //  Adapter = new SimpleAdapter(this, recordingsList, android.R.layout.simple_list_item_1, new String[]{"recording"}, new int[]{android.R.id.text1});
         listView.setAdapter(arrayAdapter);
 
-        // Register for the ContextMenu
-        registerForContextMenu(listView);
+        //Needs to be called to associate the list view with a Pop Up context Menu
+        this.registerForContextMenu(listView);
     }
 
 
@@ -87,13 +87,15 @@ public class RecordingLibraScr extends Activity {
     }
 
 
-    // We want to create a context Menu when the user long click on an recording
+    // Creates a context Menu. Method is called when the user sends a long click event by long clicking on an recording/ListView element
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
         // We know that each row in the adapter is a String
         String fileName = (String) arrayAdapter.getItem(aInfo.position);
+        selectedFileIndex= aInfo.position;
+
         menu.setHeaderTitle("Options for " + fileName);
         menu.add(1, 1, 1, "Select");
         menu.add(1, 2, 2, "Delete");
@@ -111,6 +113,13 @@ public class RecordingLibraScr extends Activity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
 
+                            String selectedFilePath= recordingFiles[selectedFileIndex].toString();
+                            Intent intent = new Intent(RecordingLibraScr.this, EffectsConfigScr.class);
+                            /* An Intent can carry a payload of various data types as key-value pairs called extras.
+                            The putExtra() method takes the key name in the first arg and the value in the second arg
+                            */
+                            intent.putExtra("AudioFilePath", selectedFilePath);
+                            startActivity(intent);
 
                         }
                     })
@@ -130,6 +139,7 @@ public class RecordingLibraScr extends Activity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
 
+                            fileManager.deleteFile(recordingFiles[selectedFileIndex]);  //deletes the file
 
                         }
                     })
