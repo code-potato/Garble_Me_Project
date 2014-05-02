@@ -1,12 +1,18 @@
 package com.codepotato.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.*;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.codepotato.controller.AudioController;
+import com.codepotato.controller.FileManager;
 
 import java.io.*;
 
@@ -19,6 +25,8 @@ public class EffectsConfigScr extends Activity {
     private boolean isAudioPlaying = false;
     static final int ADD_EFFECT_REQUEST = 1;  // The request code
     SeekBar audioPlayerBar;
+    private FileManager fileManager;
+    private Handler myHandler = new Handler();
 
     /**
      * This function is called when the Play button is pressed in the view.
@@ -40,16 +48,64 @@ public class EffectsConfigScr extends Activity {
         }
     }
 
+    // Add button click event handler
     public void addButtonOnClick(View V) {
         Intent intent = new Intent(EffectsConfigScr.this, EffectSettingsScr.class);
         startActivityForResult(intent, ADD_EFFECT_REQUEST);
     }
 
+    // Export button click event handler
+    public void exportButtonOnClick(View V) {
+        promptUserForExportFileName();
+    }
+
+    private void promptUserForExportFileName() {
+
+        // get activity_initial_scr_prompt.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View promptView = layoutInflater.inflate(R.layout.activity_filename_prompt, null);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this); //
+        alert.setTitle("Enter File Name:");
+        alert.setView(promptView);
+        final EditText input = (EditText) promptView.findViewById(R.id.userInput);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
+        alert.setCancelable(false)
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    //IF THE USER CLICKED ON SAVE BUTTON
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String filename = String.valueOf(input.getText());
+                        if (filename.isEmpty()) {
+                            Toast toast = Toast.makeText(EffectsConfigScr.this, "You need to enter a file name!", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            dialog.dismiss();
+                            promptUserForExportFileName();
+                        } else {
+                            Toast.makeText(EffectsConfigScr.this, "The " + filename + " file is exported to the recording library!", Toast.LENGTH_LONG).show();
+                            Log.d(InitialScr.LOG_TAG, "The file name is: " + filename);
+                            //audioFile = recorder.save(filename);
+                            //fileManager.
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    // If the User clicked on the cancel button
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Canceled.
+                        dialog.cancel();
+                    }
+                });
+        alert.show();
+    }
+
+    // Restart button click event handler
     public void restartButtonOnClick(View V) {
         try {
             audioController.returnPlayerToBeginning();
         } catch (IOException e) {
-            Log.d(InitialScr.LOG_TAG, "Audio controller can't be restarted!");
+            Log.d(InitialScr.LOG_TAG, "Audio player can't be restarted!");
         }
     }
 
@@ -166,6 +222,7 @@ public class EffectsConfigScr extends Activity {
         fileNameText.setText("Filename: " + audioFile.getName());
         audioController = new AudioController(audioFile);
         initAudioPlayerBar();
+        //fileManager = new FileManager();
     }
 
     private void InputStreamToFile(InputStream is, File file) {
@@ -204,11 +261,13 @@ public class EffectsConfigScr extends Activity {
     public void startPlayingAudio() {
         audioController.play();
         isAudioPlaying = audioController.isPlaying();
+        myHandler.postDelayed(updateAudioPlayerBar, 1000);
     }
 
     public void stopPlayingAudio() {
         audioController.pause();
         isAudioPlaying = audioController.isPlaying();
+        myHandler.removeCallbacks(updateAudioPlayerBar); //stops the seekBar update
     }
 
     @Override
@@ -258,4 +317,17 @@ public class EffectsConfigScr extends Activity {
         }
         this.finish();
     }
+
+    /**
+     * A seekBar thread for updating the AudioPlayerBar.
+     */
+    private Runnable updateAudioPlayerBar = new Runnable() {
+
+        public void run() {
+            audioPlayerBar.setProgress(audioController.currAudioPosition());
+            Log.d(InitialScr.LOG_TAG, "Audio controller position:" + audioController.currAudioPosition());
+            Log.d(InitialScr.LOG_TAG, "Audio controller audio length:" + audioController.audioLength());
+            myHandler.postDelayed(this, 1000);
+        }
+    };
 }

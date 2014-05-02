@@ -119,10 +119,20 @@ public class EffectSettingsScr extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // Replace fragment when a drop-down menu item is selected
-                if (!effectLoaded)
-                    replaceFragment();
-                else
+                if (!effectLoaded) {
+                    Effect effect = null;
+                    String effectClassName = spinner.getSelectedItem().toString() + "Effect";
+                    try {
+                        effect = (Effect) (Class.forName("com.codepotato.model.effects." + effectClassName)).newInstance();
+                        Log.d(InitialScr.LOG_TAG, "com.codepotato.view.effects." + effectClassName + " is created!");
+                    } catch (Exception e) {
+                        Log.d(InitialScr.LOG_TAG, "com.codepotato.model.effects." + effectClassName + " error!");
+                        e.printStackTrace();
+                    }
+                    replaceFragment(effect);
+                } else {
                     effectLoaded = false;
+                }
             }
 
             @Override
@@ -149,10 +159,18 @@ public class EffectSettingsScr extends Activity {
             Toast toast = Toast.makeText(EffectSettingsScr.this, "The " + EffectsConfigScr.audioController.getEffect(effectID).getName() + " effect is loaded!", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
-            initFragment(effect);
+            replaceFragment(effect);
             effectLoaded = true;
         } else {
-            replaceFragment();
+            String effectClassName = spinner.getSelectedItem().toString() + "Effect";
+            try {
+                effect = (Effect) (Class.forName("com.codepotato.model.effects." + effectClassName)).newInstance();
+                Log.d(InitialScr.LOG_TAG, "com.codepotato.view.effects." + effectClassName + " is created!");
+            } catch (Exception e) {
+                Log.d(InitialScr.LOG_TAG, "com.codepotato.model.effects." + effectClassName + " error!");
+                e.printStackTrace();
+            }
+            replaceFragment(effect);
         }
         final Button saveButton = (Button) findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -163,10 +181,13 @@ public class EffectSettingsScr extends Activity {
         });
     }
 
-    /* Load the previous saved parameters while user
-    *  loads an effect
-    */
-    public void initFragment(Effect effect) {
+    /* Change the parameters of sliders
+     * with previously saved parameters
+     * when user presses a specific effect
+     * or with default parameters
+     * when user changes the drop-down menu item.
+     */
+    public void replaceFragment(Effect effect) {
         String fragmentClassName = spinner.getSelectedItem().toString() + "Fragment";
         try {
             Fragment fragment = (Fragment) (Class.forName("com.codepotato.view." + fragmentClassName)).newInstance();
@@ -181,25 +202,6 @@ public class EffectSettingsScr extends Activity {
                     chorusFragment.setEffect(effect);
                 }
             }
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction transaction = fm.beginTransaction();
-            transaction.replace(R.id.fragmentContainer, fragment);
-            transaction.commit();
-        } catch (Exception e) {
-            Log.d(InitialScr.LOG_TAG, "com.codepotato.view." + fragmentClassName + " error!");
-            e.printStackTrace();
-        }
-    }
-
-    /* Change the parameter sliders
-     * with default parameters while user
-     * changes the drop-down menu item.
-     */
-    public void replaceFragment() {
-        String fragmentClassName = spinner.getSelectedItem().toString() + "Fragment";
-        try {
-            Fragment fragment = (Fragment) (Class.forName("com.codepotato.view." + fragmentClassName)).newInstance();
-            Log.d(InitialScr.LOG_TAG, "com.codepotato.view." + fragmentClassName + " is created!");
             FragmentManager fm = getFragmentManager();
             FragmentTransaction transaction = fm.beginTransaction();
             transaction.replace(R.id.fragmentContainer, fragment);
