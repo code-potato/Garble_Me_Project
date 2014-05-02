@@ -207,9 +207,9 @@ public class EffectsConfigScr extends Activity {
         setContentView(R.layout.activity_effects_config_scr);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         // Load recorded audio file
-        //audioFile = new File(getIntent().getStringExtra("AudioFilePath"));
+        audioFile = new File(getIntent().getStringExtra("AudioFilePath"));
         // Use test audio file from assets instead
-        try {
+        /*try {
             filepath = this.getFilesDir() + "/emma16.raw";
             Log.d("emma16.raw", filepath);
             InputStream stream = getAssets().open("emma16.raw");
@@ -218,7 +218,7 @@ public class EffectsConfigScr extends Activity {
         } catch (IOException e) {
             //Logging exception
             Log.d("emma16.raw", "Error loading test file!");
-        }
+        }*/
         TextView fileNameText = (TextView) findViewById(R.id.filenameText);
         fileNameText.setText("Filename: " + audioFile.getName());
         audioController = new AudioController(audioFile);
