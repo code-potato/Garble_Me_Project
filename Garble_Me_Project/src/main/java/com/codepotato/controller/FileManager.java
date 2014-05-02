@@ -29,8 +29,8 @@ public class FileManager {
     EffectChain effectChain;
 
     public FileManager() {
-        effectChain= EffectChainFactory.initEffectChain();
-        effectChain.addEffect(new EchoEffect());
+        //effectChain= EffectChainFactory.initEffectChain(); //this was just for testing
+        //effectChain.addEffect(new EchoEffect());
     }
 
     /**
@@ -53,23 +53,23 @@ public class FileManager {
         return rsuccess;
     }
     /**
-     * Retrieves the list of recorded raw files
+     * Retrieves the recorded raw files
      * @param appContext an instance of the Application context. Can be retrieved by Context.getApplicationContext in a
      *                   GUI Activity Class via this.getApplicationContext.
      * @return File[] an array of File objects
      */
-    public File[] listRawFiles(Context appContext){
+    public File[] getRawFiles(Context appContext){
         //Log.d(LOGTAG, "about to List files");
         File searchDir = new File(appContext.getFilesDir(), Recorder.SAVED_RAW_FOLDER);
         appContext= null;
         //Log.d(LOGTAG, "Search Dir: " + searchDir.toString());
-        File fileList[]= searchDir.listFiles(new FilenameFilter() {
+        File fileList[]= searchDir.listFiles(new FilenameFilter() { //will only retrieve files ending in .raw
             @Override
             public boolean accept(File dir, String filename) {
                 return filename.endsWith(".raw");
             }
         });
-        //File fileList[] = searchDir.listFiles();
+
 
         /*Log.d(LOGTAG, "fileList size: "+ Integer.toString(fileList.length)+ " STRING: " + fileList.toString());
         for(File file_iterator: fileList){
@@ -78,6 +78,21 @@ public class FileManager {
 
 
         return fileList;
+    }
+
+    /**
+     * Retrieves a String based list of the raw file's names
+     * @param appContext
+     * @return String[] list of raw file names
+     */
+    public String[] listRawFiles(Context appContext){
+        File temp[]= this.getRawFiles(appContext);
+        appContext= null;
+
+        String[] list= new String[temp.length];
+        for (int i=0; i < temp.length; i++)
+            list[i]= temp[i].getName();
+        return list;
     }
 
     /**
@@ -327,3 +342,4 @@ public class FileManager {
         return FileNameString;
     }
 }
+

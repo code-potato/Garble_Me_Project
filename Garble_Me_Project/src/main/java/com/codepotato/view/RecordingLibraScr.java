@@ -5,45 +5,58 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
+import com.codepotato.controller.FileManager;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class RecordingLibraScr extends Activity {
+    private static final String LOGTAG= "CodePotatoRecLib";
+    FileManager fileManager= new FileManager();
+    String recordingsList[]; //String based list of the files
+    File recordingFiles[];
     // The list of recordings
-    List<Map<String, String>> recordingsList = new ArrayList<Map<String, String>>();
+    //List<Map<String, String>> recordingsList = new ArrayList<Map<String, String>>();
     // This is the Adapter being used to display the list's data
-    SimpleAdapter Adapter;
+    //SimpleAdapter Adapter;
+    ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recording_libra_scr);
 
-        initList();
+        //initList();
+        recordingsList= fileManager.listRawFiles(this.getApplicationContext()); //retrieves the list of raw file names
+        recordingFiles= fileManager.getRawFiles(this.getApplicationContext()); //gets a list of raw files form recording manager
         // We get the ListView component from the layout
-        ListView lv = (ListView) findViewById(R.id.listView);
-        // React to user clicks on a recording
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ListView listView = (ListView) findViewById(R.id.listView);
+
+        // React to ListView click events(selecting a recording) by implementing AdapterView's OnItemClickListener interface
+        //which acts as a callback for ListView
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long id) {
                 TextView clickedView = (TextView) view;
                 Toast.makeText(RecordingLibraScr.this, "Keep pressing on Recording [" + clickedView.getText() + "] for more options!", Toast.LENGTH_SHORT).show();
+                Log.d(LOGTAG, "Position: "+ Integer.toString(position));
+                Log.d(LOGTAG, "id: "+ Long.toString(id));
             }
         });
-        // This is a simple adapter
-        Adapter = new SimpleAdapter(this, recordingsList, android.R.layout.simple_list_item_1, new String[]{"recording"}, new int[]{android.R.id.text1});
-        lv.setAdapter(Adapter);
+        // an adapter is(in this case) simply an array wrapper for the ListView that creates an view for each element
+        arrayAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, recordingsList);
+      //  Adapter = new SimpleAdapter(this, recordingsList, android.R.layout.simple_list_item_1, new String[]{"recording"}, new int[]{android.R.id.text1});
+        listView.setAdapter(arrayAdapter);
 
         // Register for the ContextMenu
-        registerForContextMenu(lv);
+        registerForContextMenu(listView);
     }
 
 
@@ -73,49 +86,15 @@ public class RecordingLibraScr extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initList() {
-        // We populate the recordings
-        recordingsList.add(loadRecording("recording", "sample1"));
-        recordingsList.add(loadRecording("recording", "sample2"));
-        recordingsList.add(loadRecording("recording", "sample3"));
-        recordingsList.add(loadRecording("recording", "sample4"));
-        recordingsList.add(loadRecording("recording", "sample5"));
-        recordingsList.add(loadRecording("recording", "sample6"));
-        recordingsList.add(loadRecording("recording", "sample7"));
-
-        recordingsList.add(loadRecording("recording", "sample1"));
-        recordingsList.add(loadRecording("recording", "sample2"));
-        recordingsList.add(loadRecording("recording", "sample3"));
-        recordingsList.add(loadRecording("recording", "sample4"));
-        recordingsList.add(loadRecording("recording", "sample5"));
-        recordingsList.add(loadRecording("recording", "sample6"));
-        recordingsList.add(loadRecording("recording", "sample7"));
-
-        recordingsList.add(loadRecording("recording", "sample1"));
-        recordingsList.add(loadRecording("recording", "sample2"));
-        recordingsList.add(loadRecording("recording", "sample3"));
-        recordingsList.add(loadRecording("recording", "sample4"));
-        recordingsList.add(loadRecording("recording", "sample5"));
-        recordingsList.add(loadRecording("recording", "sample6"));
-        recordingsList.add(loadRecording("recording", "sample7"));
-
-    }
-
-    private HashMap<String, String> loadRecording(String key, String name) {
-        HashMap<String, String> recordings = new HashMap<String, String>();
-        recordings.put(key, name);
-
-        return recordings;
-    }
 
     // We want to create a context Menu when the user long click on an recording
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        // We know that each row in the adapter is a Map
-        HashMap map = (HashMap) Adapter.getItem(aInfo.position);
-        menu.setHeaderTitle("Options for " + map.get("recording"));
+        // We know that each row in the adapter is a String
+        String fileName = (String) arrayAdapter.getItem(aInfo.position);
+        menu.setHeaderTitle("Options for " + fileName);
         menu.add(1, 1, 1, "Select");
         menu.add(1, 2, 2, "Delete");
     }
