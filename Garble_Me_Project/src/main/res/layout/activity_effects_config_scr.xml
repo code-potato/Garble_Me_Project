@@ -18,9 +18,9 @@
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Export"
             android:id="@+id/exportButton" android:gravity="top" android:layout_alignBottom="@+id/addButton"
-            android:layout_toRightOf="@+id/playButton" android:layout_alignParentTop="true"/>
+            android:layout_toRightOf="@+id/playButton" android:layout_alignParentTop="true"
+            android:background="@drawable/export_button" android:onClick="exportButtonOnClick"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

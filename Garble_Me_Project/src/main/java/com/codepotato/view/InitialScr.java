@@ -67,9 +67,9 @@ public class InitialScr extends Activity {
 
     private void promptUserForSaveFileName() {
 
-        // get activity_initial_scr_prompt.xml view
+        // get activity_filename_prompt.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View promptView = layoutInflater.inflate(R.layout.activity_initial_scr_prompt, null);
+        View promptView = layoutInflater.inflate(R.layout.activity_filename_prompt, null);
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this); //
         alert.setTitle("Enter File Name:");
