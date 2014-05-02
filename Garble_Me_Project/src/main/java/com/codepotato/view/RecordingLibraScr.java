@@ -137,6 +137,8 @@ public class RecordingLibraScr extends Activity {
                         public void onClick(DialogInterface dialog, int whichButton) {
 
                             fileManager.deleteFile(recordingFiles[selectedFileIndex]);  //deletes the file
+                            arrayAdapter.notifyDataSetChanged(); //refreshes the ListView
+
 
                         }
                     })
