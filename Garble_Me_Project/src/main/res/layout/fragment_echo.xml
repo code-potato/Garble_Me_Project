@@ -9,7 +9,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/delay"
                 android:text="Delay" android:editable="false"/>
-        <SeekBar android:layout_width="300dp" android:layout_height="wrap_content" android:id="@+id/delayBar"/>
+        <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/delayBar"
+                 android:layout_weight="80"/>
     </TableRow>
 
     <TableRow
@@ -19,7 +20,8 @@
                   android:layout_height="wrap_content"
                   android:id="@+id/wet"
                   android:text="Wet" android:editable="false"/>
-        <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/wetBar"/>
+        <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/wetBar"
+                 android:layout_weight="80"/>
     </TableRow>
 
     <TableRow
@@ -30,7 +32,8 @@
                   android:id="@+id/dry"
                   android:text="Dry"
                   android:editable="false"/>
-        <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/dryBar"/>
+        <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/dryBar"
+                 android:layout_weight="80"/>
     </TableRow>
     <TableRow
             android:layout_width="fill_parent"
@@ -40,6 +43,7 @@
                   android:id="@+id/feedBack"
                   android:text="FeedBack"
                   android:editable="false"/>
-        <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/feedbackBar"/>
+        <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/feedbackBar"
+                 android:layout_weight="80"/>
     </TableRow>
 </TableLayout>

@@ -14,12 +14,11 @@ import android.widget.*;
 import com.codepotato.controller.FileManager;
 
 import java.io.File;
-import java.util.HashMap;
 
 
 public class RecordingLibraScr extends Activity {
-    private static final String LOGTAG= "CodePotatoRecLib";
-    FileManager fileManager= new FileManager();
+    private static final String LOGTAG = "CodePotatoRecLib";
+    FileManager fileManager = new FileManager();
     String recordingsList[]; //String based list of the files
     File recordingFiles[];
     int selectedFileIndex; //will contain index/id of the selected listview element
@@ -32,8 +31,8 @@ public class RecordingLibraScr extends Activity {
         setContentView(R.layout.activity_recording_libra_scr);
 
 
-        recordingsList= fileManager.listRawFiles(this.getApplicationContext()); //retrieves the list of raw file names
-        recordingFiles= fileManager.getRawFiles(this.getApplicationContext()); //gets a list of raw files form recording manager
+        recordingsList = fileManager.listRawFiles(this.getApplicationContext()); //retrieves the list of raw file names
+        recordingFiles = fileManager.getRawFiles(this.getApplicationContext()); //gets a list of raw files form recording manager
         // We get the ListView component from the layout
         ListView listView = (ListView) findViewById(R.id.listView);
 
@@ -44,12 +43,12 @@ public class RecordingLibraScr extends Activity {
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long id) {
                 TextView clickedView = (TextView) view;
                 Toast.makeText(RecordingLibraScr.this, "Keep pressing on Recording [" + clickedView.getText() + "] for more options!", Toast.LENGTH_SHORT).show();
-                Log.d(LOGTAG, "Position: "+ Integer.toString(position));
-                Log.d(LOGTAG, "id: "+ Long.toString(id));
+                Log.d(LOGTAG, "Position: " + Integer.toString(position));
+                Log.d(LOGTAG, "id: " + Long.toString(id));
             }
         });
         // an adapter is(in this case) simply an array wrapper for the ListView that creates a view for each element
-        arrayAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, recordingsList);
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, recordingsList);
         listView.setAdapter(arrayAdapter);
 
         //Needs to be called to associate the list view with a Pop Up context Menu
@@ -91,7 +90,7 @@ public class RecordingLibraScr extends Activity {
         AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
         // We know that each row in the adapter is a String
         String fileName = (String) arrayAdapter.getItem(aInfo.position);
-        selectedFileIndex= aInfo.position;
+        selectedFileIndex = aInfo.position;
 
         menu.setHeaderTitle("Options for " + fileName);
         menu.add(1, 1, 1, "Select");
@@ -110,14 +109,14 @@ public class RecordingLibraScr extends Activity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
 
-                            String selectedFilePath= recordingFiles[selectedFileIndex].toString();
+                            String selectedFilePath = recordingFiles[selectedFileIndex].toString();
                             Intent intent = new Intent(RecordingLibraScr.this, EffectsConfigScr.class);
                             /* An Intent can carry a payload of various data types as key-value pairs called extras.
                             The putExtra() method takes the key name in the first arg and the value in the second arg
                             */
                             intent.putExtra("AudioFilePath", selectedFilePath);
                             startActivity(intent);
-
+                            finish();
                         }
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
