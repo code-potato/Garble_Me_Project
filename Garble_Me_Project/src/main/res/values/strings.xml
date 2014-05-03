@@ -11,9 +11,14 @@
     <string name="title_activity_about_scr">AboutScr</string>
     <string name="ToggleButton">ToggleButton</string>
     <string name="filename1">filename1</string>
+
     <string-array name="effects_array">
         <item>Select</item>
         <item>Echo</item>
         <item>Chorus</item>
+        <item>Flanger</item>
     </string-array>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

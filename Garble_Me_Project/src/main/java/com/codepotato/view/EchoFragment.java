@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
-import android.widget.Toast;
 import com.codepotato.model.effects.EchoEffect;
 import com.codepotato.model.effects.Effect;
 
@@ -21,12 +20,10 @@ public class EchoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.echo_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_echo, container, false);
 
         // SeekBar for the delayBar
         SeekBar delayBar = (SeekBar) view.findViewById(R.id.delayBar);
-        if (delayBar != null)
-            Log.d(InitialScr.LOG_TAG, "Delay bar is found!");
         if (effect != null)
             delayBar.setProgress(effect.getDelayTime());
         else
@@ -43,12 +40,12 @@ public class EchoFragment extends Fragment {
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(getActivity().getBaseContext(), "Delay Bar Progress: " + progressChanged, Toast.LENGTH_SHORT).show();
+                if (effect != null) {
+                    effect.setDelayTime(progressChanged);
+                }
             }
         });
         SeekBar wetBar = (SeekBar) view.findViewById(R.id.wetBar);
-        if (wetBar != null)
-            Log.d(InitialScr.LOG_TAG, "Wet bar is found!");
         if (effect != null)
             wetBar.setProgress(effect.getWetGain());
         else
@@ -65,13 +62,13 @@ public class EchoFragment extends Fragment {
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(getActivity().getBaseContext(), "Wet Bar Progress: " + progressChanged, Toast.LENGTH_SHORT).show();
+                if (effect != null) {
+                    effect.setWetGain(progressChanged);
+                }
             }
         });
 
         SeekBar dryBar = (SeekBar) view.findViewById(R.id.dryBar);
-        if (dryBar != null)
-            Log.d(InitialScr.LOG_TAG, "Dry bar is found!");
         if (effect != null)
             dryBar.setProgress(effect.getDryGain());
         else
@@ -88,13 +85,13 @@ public class EchoFragment extends Fragment {
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(getActivity().getBaseContext(), "Dry Bar Progress: " + progressChanged, Toast.LENGTH_SHORT).show();
+                if (effect != null) {
+                    effect.setDryGain(progressChanged);
+                }
             }
         });
 
         SeekBar feedbackBar = (SeekBar) view.findViewById(R.id.feedbackBar);
-        if (feedbackBar != null)
-            Log.d(InitialScr.LOG_TAG, "Feedback bar is found!");
         if (effect != null)
             feedbackBar.setProgress(effect.getFeedbackGain());
         else
@@ -111,7 +108,9 @@ public class EchoFragment extends Fragment {
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(getActivity().getBaseContext(), "Feedback Bar Progress: " + progressChanged, Toast.LENGTH_SHORT).show();
+                if (effect != null) {
+                    effect.setFeedbackGain(progressChanged);
+                }
             }
         });
 

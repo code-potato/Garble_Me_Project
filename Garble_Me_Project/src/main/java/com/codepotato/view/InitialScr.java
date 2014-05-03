@@ -76,7 +76,7 @@ public class InitialScr extends Activity {
         alert.setView(promptView);
         final EditText input = (EditText) promptView.findViewById(R.id.userInput);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
+        imm.showSoftInput(input, InputMethodManager.SHOW_FORCED);
         alert.setCancelable(false)
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     //IF THE USER CLICKED ON SAVE BUTTON
@@ -89,7 +89,6 @@ public class InitialScr extends Activity {
                             dialog.dismiss();
                             promptUserForSaveFileName();
                         } else {
-                            Toast.makeText(InitialScr.this, "The file name is: " + filename, Toast.LENGTH_LONG).show();
                             Log.d(LOG_TAG, "The file name is: " + filename);
                             audioFile = recorder.save(filename);
                             textTimer.setText("00:00");
