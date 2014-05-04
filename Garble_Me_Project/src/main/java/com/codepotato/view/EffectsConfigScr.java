@@ -15,6 +15,7 @@ import com.codepotato.controller.AudioController;
 import com.codepotato.controller.FileManager;
 
 import java.io.*;
+import java.util.HashMap;
 
 
 public class EffectsConfigScr extends Activity {
@@ -22,10 +23,12 @@ public class EffectsConfigScr extends Activity {
     public static AudioController audioController;
     private File audioFile;
     private String filepath;
-    private boolean isAudioPlaying = false;
-    static final int ADD_EFFECT_REQUEST = 1;  // The request code
+    static final int ADD_EFFECT_REQUEST = 1;  // The add request code
+    static final int UPDATE_EFFECT_REQUEST = 2;  // The update request code
     SeekBar audioPlayerBar;
     private FileManager fileManager;
+    ToggleButton playToggle;
+    private static HashMap<Integer, Button> buttons = new HashMap<Integer, Button>();
     private Handler myHandler = new Handler();
 
     /**
@@ -34,17 +37,15 @@ public class EffectsConfigScr extends Activity {
      * @param view is passed implicitly by the GUI.
      */
     public void togglePlaying(View view) {
-        ToggleButton playToggle = (ToggleButton) view;
+        playToggle = (ToggleButton) view;
 
         // Is audio playing?
         if (playToggle.isChecked()) {
-            playToggle.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.pause_button)); //changes the buttons background image
             startPlayingAudio();
-            Toast.makeText(EffectsConfigScr.this, "Start playing audio!", Toast.LENGTH_SHORT).show();
+            playToggle.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.pause_button)); //changes the buttons background image
         } else {
-            playToggle.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.play_button)); //changes the buttons background image
             stopPlayingAudio();
-            Toast.makeText(EffectsConfigScr.this, "Stop playing audio!", Toast.LENGTH_SHORT).show();
+            playToggle.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.play_button)); //changes the buttons background image
         }
     }
 
@@ -70,7 +71,7 @@ public class EffectsConfigScr extends Activity {
         alert.setView(promptView);
         final EditText input = (EditText) promptView.findViewById(R.id.userInput);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
+        imm.showSoftInput(input, InputMethodManager.SHOW_FORCED);
         alert.setCancelable(false)
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     //IF THE USER CLICKED ON SAVE BUTTON
@@ -83,8 +84,8 @@ public class EffectsConfigScr extends Activity {
                             dialog.dismiss();
                             promptUserForExportFileName();
                         } else {
-                            Toast.makeText(EffectsConfigScr.this, "The " + filename + " file is exported to the recording library!", Toast.LENGTH_LONG).show();
-                            Log.d(InitialScr.LOG_TAG, "The file name is: " + filename);
+                            Toast.makeText(EffectsConfigScr.this, "The " + filename + " file is exported to the recording library!", Toast.LENGTH_SHORT).show();
+                            //Log.d(InitialScr.LOG_TAG, "The file name is: " + filename);
                             //audioFile = recorder.save(filename);
                             //fileManager.
                         }
@@ -104,6 +105,7 @@ public class EffectsConfigScr extends Activity {
     public void restartButtonOnClick(View V) {
         try {
             audioController.returnPlayerToBeginning();
+            audioPlayerBar.setProgress(audioController.currAudioPosition());
         } catch (IOException e) {
             Log.d(InitialScr.LOG_TAG, "Audio player can't be restarted!");
         }
@@ -126,8 +128,7 @@ public class EffectsConfigScr extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 try {
                     audioController.seekPlayer(progressChanged);
-                    Toast.makeText(EffectsConfigScr.this, "Audio Player Bar Progress: " + progressChanged,
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EffectsConfigScr.this, "Audio Player Progress: " + progressChanged, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -142,7 +143,32 @@ public class EffectsConfigScr extends Activity {
             }
             if (resultCode == RESULT_CANCELED) {
                 //Write your code if there's no result
-                Log.d(InitialScr.LOG_TAG, "No effect ID is returned!");
+                Log.d(InitialScr.LOG_TAG, "No added effect ID is returned!");
+            }
+        }
+        if (requestCode == UPDATE_EFFECT_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                final int previousEffectID = Integer.parseInt(data.getStringExtra("PreviousAudioEffectID"));
+                Log.d(InitialScr.LOG_TAG, "Previous AudioEffectID: " + data.getStringExtra("PreviousAudioEffectID"));
+                final int effectID = Integer.parseInt(data.getStringExtra("AudioEffectID"));
+                Log.d(InitialScr.LOG_TAG, "Updated AudioEffectID: " + data.getStringExtra("AudioEffectID"));
+                if (effectID != previousEffectID) {
+                    audioController.removeEffect(previousEffectID);
+                    Log.d(InitialScr.LOG_TAG, "Removed previous AudioEffectID: " + data.getStringExtra("PreviousAudioEffectID"));
+                    String effectName = audioController.getEffect(effectID).getName();
+                    final Button effectButton = buttons.get(previousEffectID);
+                    if (effectButton != null) {
+                        effectButton.setId(effectID);
+                        effectButton.setText(effectName);
+                        buttons.remove(previousEffectID);
+                        buttons.put(effectID, effectButton);
+                        Log.d(InitialScr.LOG_TAG, "Updated effect button text:" + effectName);
+                    }
+                }
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Write your code if there's no result
+                Log.d(InitialScr.LOG_TAG, "No updated effect ID is returned!");
             }
         }
     }//onActivityResult
@@ -150,8 +176,8 @@ public class EffectsConfigScr extends Activity {
     // Create dynamic buttons
     public void createButtons(Intent intent) {
         final int effectID = Integer.parseInt(intent.getStringExtra("AudioEffectID"));
+        Log.d(InitialScr.LOG_TAG, "Added AudioEffectID: " + intent.getStringExtra("AudioEffectID"));
         String effectName = audioController.getEffect(effectID).getName();
-        Log.d("AudioEffectID:", intent.getStringExtra("AudioEffectID"));
         TableLayout dynamicLayout = (TableLayout) findViewById(R.id.tableDynamic);
         int buttonsInRow = 0;
         int numRows = dynamicLayout.getChildCount();
@@ -171,30 +197,29 @@ public class EffectsConfigScr extends Activity {
         if (buttonsInRow < 2) {
             final Button effectButton = new Button(this);
             row.addView(effectButton, 300, 100);
+            buttons.put(effectID, effectButton);
+            effectButton.setId(effectID);
             effectButton.setText(effectName);
             effectButton.setGravity(Gravity.CENTER);
-            effectButton.setId(effectID);
             effectButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Effect button is pressed! ", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(EffectsConfigScr.this, EffectSettingsScr.class);
                     intent.putExtra("EffectID", String.valueOf(effectButton.getId()));
-                    startActivity(intent);
+                    startActivityForResult(intent, UPDATE_EFFECT_REQUEST);
                 }
             });
             final Button removeButton = new Button(this);
             row.addView(removeButton);
-            removeButton.setBackground(this.getResources().getDrawable(R.drawable.remove_button));
             removeButton.setId(effectID);
+            removeButton.setBackground(this.getResources().getDrawable(R.drawable.remove_button));
             removeButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     ViewGroup layout = (ViewGroup) removeButton.getParent();
                     layout.removeView(removeButton);
                     layout.removeView(effectButton);
-                    audioController.removeEffect(effectID);
-                    Toast toast = Toast.makeText(getApplicationContext(), "Effect is removed! ", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+                    buttons.remove(effectButton.getId());
+                    audioController.removeEffect(effectButton.getId());
+                    Log.d(InitialScr.LOG_TAG, "Removed AudioEffectID: " + effectButton.getId());
                 }
             });
         }
@@ -260,13 +285,11 @@ public class EffectsConfigScr extends Activity {
 
     public void startPlayingAudio() {
         audioController.play();
-        isAudioPlaying = audioController.isPlaying();
-        myHandler.postDelayed(updateAudioPlayerBar, 1000);
+        myHandler.postDelayed(updateAudioPlayerBar, 5);
     }
 
     public void stopPlayingAudio() {
         audioController.pause();
-        isAudioPlaying = audioController.isPlaying();
         myHandler.removeCallbacks(updateAudioPlayerBar); //stops the seekBar update
     }
 
@@ -288,6 +311,7 @@ public class EffectsConfigScr extends Activity {
             case R.id.recordings:
                 intent = new Intent(EffectsConfigScr.this, RecordingLibraScr.class);
                 startActivity(intent);
+                finish();
                 return true;
             case R.id.about:
                 intent = new Intent(EffectsConfigScr.this, AboutScr.class);
@@ -296,9 +320,8 @@ public class EffectsConfigScr extends Activity {
             case android.R.id.home:
                 try {
                     audioController.pause();
-                    Log.d(InitialScr.LOG_TAG, "Audio controller is stopped!");
                 } catch (Exception e) {
-                    Log.d(InitialScr.LOG_TAG, "Audio controller throws an exception!");
+                    Log.d(InitialScr.LOG_TAG, "Audio controller termination causes an exception!");
                 }
                 this.finish();
                 return true;
@@ -311,9 +334,8 @@ public class EffectsConfigScr extends Activity {
         // do something on back.
         try {
             audioController.pause();
-            Log.d(InitialScr.LOG_TAG, "Audio controller is stopped!");
         } catch (Exception e) {
-            Log.d(InitialScr.LOG_TAG, "Audio controller throws an exception!");
+            Log.d(InitialScr.LOG_TAG, "Audio controller termination causes an exception!");
         }
         this.finish();
     }
@@ -325,9 +347,19 @@ public class EffectsConfigScr extends Activity {
 
         public void run() {
             audioPlayerBar.setProgress(audioController.currAudioPosition());
-            Log.d(InitialScr.LOG_TAG, "Audio controller position:" + audioController.currAudioPosition());
-            Log.d(InitialScr.LOG_TAG, "Audio controller audio length:" + audioController.audioLength());
-            myHandler.postDelayed(this, 1000);
+            //Log.d(InitialScr.LOG_TAG, "Audio controller position:" + audioController.currAudioPosition());
+            /*if (audioController.isPlaying() && audioController.currAudioPosition() == 100) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                stopPlayingAudio();
+                playToggle.setChecked(false);
+                playToggle.setBackgroundDrawable(playToggle.getContext().getResources().getDrawable(R.drawable.play_button)); //changes the buttons background image
+                return;
+            }*/
+            myHandler.postDelayed(this, 5);
         }
     };
 }

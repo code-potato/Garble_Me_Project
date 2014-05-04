@@ -1,0 +1,53 @@
+<TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+    <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:layout_marginTop="50dp">
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rate"
+                android:text="Rate" android:editable="false"/>
+        <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/rateBar"
+                 android:layout_weight="80"/>
+    </TableRow>
+    <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:layout_marginTop="50dp">
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/depth"
+                android:text="Depth" android:editable="false"/>
+        <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/depthBar"
+                 android:layout_above="@+id/wetBar" android:layout_weight="80"/>
+    </TableRow>
+    <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:layout_marginTop="50dp">
+        <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/wet"
+                  android:text="Wet" android:editable="false"
+                  android:layout_alignTop="@+id/wetBar"/>
+        <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/wetBar"
+                 android:layout_weight="80"/>
+    </TableRow>
+    <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:layout_marginTop="50dp">
+        <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/dry"
+                  android:text="Dry"
+                  android:editable="false"/>
+        <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/dryBar"
+                 android:layout_weight="80"/>
+    </TableRow>
+    <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:layout_marginTop="50dp">
+        <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/feedBack"
+                  android:text="FeedBack"
+                  android:editable="false"/>
+        <SeekBar android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/feedbackBar"
+                 android:layout_alignTop="@+id/feedBack" android:layout_weight="80"/>
+    </TableRow>
+</TableLayout>

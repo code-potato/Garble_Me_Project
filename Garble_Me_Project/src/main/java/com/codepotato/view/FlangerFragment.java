@@ -2,24 +2,25 @@ package com.codepotato.view;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
-import com.codepotato.model.effects.ChorusEffect;
 import com.codepotato.model.effects.Effect;
+import com.codepotato.model.effects.FlangerEffect;
 
 /**
- * Created by terrywong on 4/24/14.
+ * Created by terrywong on 4/25/14.
  */
-public class ChorusFragment extends Fragment {
-    private ChorusEffect effect;
+public class FlangerFragment extends Fragment {
+    private FlangerEffect effect;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_chorus, container, false);
+        View view = inflater.inflate(R.layout.fragment_flanger, container, false);
         // SeekBar for the rateBar
         SeekBar rateBar = (SeekBar) view.findViewById(R.id.rateBar);
         if (effect != null)
@@ -139,8 +140,10 @@ public class ChorusFragment extends Fragment {
         return view;
     }
 
+
     public void setEffect(Effect effect) {
-        this.effect = (ChorusEffect) effect;
+        this.effect = (FlangerEffect) effect;
+        Log.d(InitialScr.LOG_TAG, "Effect is set!");
     }
 
     public Effect getEffect() {
