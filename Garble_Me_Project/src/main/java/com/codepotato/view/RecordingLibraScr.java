@@ -36,25 +36,27 @@ public class RecordingLibraScr extends Activity {
         recordingsList = new ArrayList<String>(Arrays.asList(nameList)); //must convert it to ArrayList to enable certain ListView funcitonality
 
         // We get the ListView component from the layout
-        ListView listView = (ListView) findViewById(R.id.listView);
+        final ListView listView = (ListView) findViewById(R.id.listView);  //made final so it can be accessed from the overriden onItemClick mehtod
 
-        // React to ListView click events(selecting a recording) by implementing AdapterView's OnItemClickListener interface
-        //which acts as a callback for ListView
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long id) {
-                TextView clickedView = (TextView) view;
-                Toast.makeText(RecordingLibraScr.this, "Keep pressing on Recording [" + clickedView.getText() + "] for more options!", Toast.LENGTH_SHORT).show();
-                Log.d(LOGTAG, "Position: " + Integer.toString(position));
-                Log.d(LOGTAG, "id: " + Long.toString(id));
-            }
-        });
         // an adapter is(in this case) simply an array wrapper for the ListView that creates a view for each element
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, recordingsList);
         listView.setAdapter(arrayAdapter);
 
         //Needs to be called to associate the list view with a Pop Up context Menu
         this.registerForContextMenu(listView);
+
+        // React to ListView click events(selecting a recording) by implementing AdapterView's OnItemClickListener interface
+        //which acts as a callback for ListView
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long id) {
+                /*TextView clickedView = (TextView) view;
+                Toast.makeText(RecordingLibraScr.this, "Keep pressing on Recording [" + clickedView.getText() + "] for more options!", Toast.LENGTH_SHORT).show();
+                Log.d(LOGTAG, "Position: " + Integer.toString(position));
+                Log.d(LOGTAG, "id: " + Long.toString(id));*/
+                openContextMenu(view);
+            }
+        });
     }
 
 
