@@ -14,25 +14,27 @@ import android.widget.*;
 import com.codepotato.controller.FileManager;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class RecordingLibraScr extends Activity {
     private static final String LOGTAG = "CodePotatoRecLib";
-    FileManager fileManager = new FileManager();
-    String recordingsList[]; //String based list of the files
-    File recordingFiles[];
-    int selectedFileIndex; //will contain index/id of the selected listview element
-
-    ArrayAdapter<String> arrayAdapter;
+    private FileManager fileManager = new FileManager();
+    private File recordingFiles[];
+    private int selectedFileIndex; //will contain index/id of the selected listview element
+    private ArrayList<String> recordingsList;
+    private ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recording_libra_scr);
 
+        recordingFiles = fileManager.getRawFiles(this.getApplicationContext()); //gets a list of raw Files objects from recording manager
+        String[] nameList = fileManager.listRawFiles(this.getApplicationContext()); //gets an array of file names
+        recordingsList = new ArrayList<String>(Arrays.asList(nameList)); //must convert it to ArrayList to enable certain ListView funcitonality
 
-        recordingsList = fileManager.listRawFiles(this.getApplicationContext()); //retrieves the list of raw file names
-        recordingFiles = fileManager.getRawFiles(this.getApplicationContext()); //gets a list of raw files form recording manager
         // We get the ListView component from the layout
         ListView listView = (ListView) findViewById(R.id.listView);
 
@@ -135,7 +137,8 @@ public class RecordingLibraScr extends Activity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
 
-                            fileManager.deleteFile(recordingFiles[selectedFileIndex]);  //deletes the file
+                            fileManager.deleteFile(recordingFiles[selectedFileIndex]);  //deletes the file from folder/storage
+                            recordingsList.remove(selectedFileIndex);
                             arrayAdapter.notifyDataSetChanged(); //refreshes the ListView
 
 
