@@ -12,6 +12,7 @@ import java.io.IOException;
 public class Player implements Runnable{
     private boolean isPlaying;
     private int buff_size; //determined at runtime based on hardware, sample rate, channelConfig, audioFormat
+    private int zeroCounter;
 
     SampleReader sampleReader;
     private byte[] buff;
@@ -74,6 +75,18 @@ public class Player implements Runnable{
                     sample = sampleReader.nextSample();
 
                     sample = effectChain.tickAll(sample);
+
+                    if(Math.abs(sample)< 1E-6){ //so we check that there's been at least 120 consecutive zeros
+                        zeroCounter++;
+                    }
+                    else
+                        zeroCounter=0; //we want consecutive 0.0's
+
+                    if (zeroCounter == 120){ //EOF (this is a heuristical guess really)
+                        pause();
+                        seekToBeginning();
+                        break;
+                    }
 
                     sampleReader.sampleToBytes(sample, buff, i);
                 }
