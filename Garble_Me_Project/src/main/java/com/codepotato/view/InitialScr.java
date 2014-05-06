@@ -26,7 +26,7 @@ public class InitialScr extends Activity {
     private File audioFile;
     private TextView textTimer;
     private long startTime = 0L;
-    private Handler myHandler = new Handler();
+    private Handler myHandler = new Handler(); //for sending and retrieving events to a Looper/MessageQueue(every Activity instance has one)
     long elapsedTime = 0L;
 
     /**
@@ -56,12 +56,12 @@ public class InitialScr extends Activity {
         //Starts the Stopwatch/Timer
         elapsedTime = 0L;
         startTime = SystemClock.uptimeMillis();
-        myHandler.postDelayed(updateTimer, 1000);
+        myHandler.postDelayed(updateTimer, 1000); //sends an updateTimer thread to the messageQueue after 1 second
     }
 
     private void stopRecording() {
         recorder.stop();
-        myHandler.removeCallbacks(updateTimer); //stops the timer
+        myHandler.removeCallbacks(updateTimer); //removes any threads in the MessageQueue of type updateTimer. This essentially stops the timer.
         promptUserForSaveFileName();//prompts user for File Name via an Alert Dialogue box.
     }
 
@@ -151,6 +151,7 @@ public class InitialScr extends Activity {
      */
     private Runnable updateTimer = new Runnable() {
 
+        @Override
         public void run() {
             elapsedTime = SystemClock.uptimeMillis() - startTime;
             int seconds = (int) (elapsedTime / 1000);
@@ -161,7 +162,7 @@ public class InitialScr extends Activity {
                 minutesPrefix = "0";
             textTimer.setText(minutesPrefix + minutes + ":"
                     + String.format("%02d", seconds));
-            myHandler.postDelayed(this, 1000);
+            myHandler.postDelayed(this, 1000);  //wait a second, then send this thread instance to the MessageQue to be executed again
         }
     };
 

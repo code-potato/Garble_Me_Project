@@ -88,6 +88,7 @@ public class EffectsConfigScr extends Activity {
                             //Log.d(InitialScr.LOG_TAG, "The file name is: " + filename);
                             //audioFile = recorder.save(filename);
                             //fileManager.
+                            //fileManager.convertToWavFile(audioFile);
                         }
                     }
                 })
@@ -100,6 +101,8 @@ public class EffectsConfigScr extends Activity {
                 });
         alert.show();
     }
+
+
 
     // Restart button click event handler
     public void restartButtonOnClick(View V) {

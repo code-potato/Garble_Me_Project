@@ -5,12 +5,12 @@ import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import com.codepotato.model.Recorder;
-import com.codepotato.model.effects.EchoEffect;
 import com.codepotato.model.SampleReader;
 import com.codepotato.model.EffectChain;
-import com.codepotato.model.EffectChainFactory;
 
 
 import java.io.*;
@@ -19,18 +19,25 @@ import java.util.StringTokenizer;
 /**
  * Created by senatori on 4/20/14.
  */
-public class FileManager {
+public class FileManager implements Runnable{
     private static final String LOGTAG = "CodePotatoFileManager";
     //Audio format related variables
     private static final int SAMPLERATE = 44100; //Hz
     private static final int NUM_CHANNELS = 1;
     private static final int BITRATE = 16;
 
-    EffectChain effectChain;
+    private Thread wavConvertExportThread;
+    Handler ecsHandler;
+    Context tmpContext; //will only be used for a function call in the thread. The context actually pertains to the effects config activity
+    File tmpAudioFile;
+    private EffectChain effectChain;
 
     public FileManager() {
         //effectChain= EffectChainFactory.initEffectChain(); //this was just for testing
         //effectChain.addEffect(new EchoEffect());
+        wavConvertExportThread = new Thread(this, "Wave Convert And Export Thread");
+
+
     }
 
     /**
@@ -96,15 +103,27 @@ public class FileManager {
     }
 
     /**
-     * Moves a file to the Android Music Directory. If it is not a WAV, the android music player may not recognize it.
-     * @param wavFile The File object representing the wave file to be exported.
+     * Converts a raw file to WAV and moves it to the Android Music Directory.
+     * @param rawFile The File object representing the raw file to be converted and exported.
      * @param appContext an instance of the Application context. Can be retrieved by Context.getApplicationContext in a
      *                   GUI Activity Class via this.getApplicationContext.
      * @return true if file was successfully exported (propt user to let them know, etc)
      */
-    public boolean exportToExternalMusicDir(File wavFile, Context appContext){
+    private boolean exportToExternalMusicDir(File rawFile, Context appContext){
+
+
+        File wavFile;
+        try {
+            wavFile= this.convertToWavFile(rawFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
         String stringState = Environment.getExternalStorageState(); //to make sure that there is an SD or emulated SD
+
         File path;
+
         File externalWavFile= new File(wavFile.getParent());
         boolean overalSuccess= true;
 
@@ -179,7 +198,7 @@ public class FileManager {
      * @see java.io.File
      */
 
-    public File convertToWavFile(File rawAudioFile)throws IOException{
+    private File convertToWavFile(File rawAudioFile)throws IOException{
 
         int BUFF_SIZE= 10000; //10KB buffer
         //FileInputStream raw_in;
@@ -190,6 +209,7 @@ public class FileManager {
         int byteCountOffset = 0;
         long sampleCounter=0; //FOR DEBUGING PURPOSES
         boolean comparison= false;
+        Handler mHandler;
 
         //remove the .raw extension so we can add .wav
         String waveFileNameString = removeExtension(rawAudioFile);
@@ -340,6 +360,24 @@ public class FileManager {
         StringTokenizer stringTokenizer= new StringTokenizer(FileNameString, ".");
         FileNameString = stringTokenizer.nextToken(); //now we have our audio file without .raw
         return FileNameString;
+    }
+
+    public void export(File audioFile, Context tmpContext){
+        this.tmpAudioFile = audioFile;
+        this.tmpContext = tmpContext;
+        ecsHandler= new Handler(Looper.getMainLooper()); //hopefully this will be used to send progress updates to the Activity/View thread
+        wavConvertExportThread.start();
+    }
+
+    /**
+     * Starts executing the active part of the class' code. This method is
+     * called when a thread is started that has been created with a class which
+     * implements {@code Runnable}.
+     */
+    @Override
+    public void run() {
+        this.exportToExternalMusicDir(tmpAudioFile, tmpContext);
+
     }
 }
 

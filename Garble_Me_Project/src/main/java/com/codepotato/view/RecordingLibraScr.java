@@ -54,7 +54,7 @@ public class RecordingLibraScr extends Activity {
                 Toast.makeText(RecordingLibraScr.this, "Keep pressing on Recording [" + clickedView.getText() + "] for more options!", Toast.LENGTH_SHORT).show();
                 Log.d(LOGTAG, "Position: " + Integer.toString(position));
                 Log.d(LOGTAG, "id: " + Long.toString(id));*/
-                openContextMenu(view);
+                openContextMenu(view); //launches the context menu
             }
         });
     }
