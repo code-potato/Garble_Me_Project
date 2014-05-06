@@ -28,6 +28,7 @@ public class InitialScr extends Activity {
     private long startTime = 0L;
     private Handler myHandler = new Handler(); //for sending and retrieving events to a Looper/MessageQueue(every Activity instance has one)
     long elapsedTime = 0L;
+    InputMethodManager imm;
 
     /**
      * This function is called when the Record button is pressed in the main view. This is the insertion point
@@ -75,8 +76,8 @@ public class InitialScr extends Activity {
         alert.setTitle("Enter File Name:");
         alert.setView(promptView);
         final EditText input = (EditText) promptView.findViewById(R.id.userInput);
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(input, InputMethodManager.SHOW_FORCED);
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY); // show
         alert.setCancelable(false)
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     //IF THE USER CLICKED ON SAVE BUTTON
@@ -91,6 +92,7 @@ public class InitialScr extends Activity {
                         } else {
                             Log.d(LOG_TAG, "The file name is: " + filename);
                             audioFile = recorder.save(filename);
+                            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide
                             textTimer.setText("00:00");
                             Intent intent = new Intent(InitialScr.this, EffectsConfigScr.class);
                             /* An Intent can carry a payload of various data types as key-value pairs called extras.
@@ -106,6 +108,7 @@ public class InitialScr extends Activity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Canceled.
                         dialog.cancel();
+                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide
                         textTimer.setText("00:00");
                     }
                 });

@@ -30,6 +30,7 @@ public class EffectsConfigScr extends Activity {
     ToggleButton playToggle;
     private static HashMap<Integer, Button> buttons = new HashMap<Integer, Button>();
     private Handler myHandler = new Handler();
+    InputMethodManager imm;
 
     /**
      * This function is called when the Play button is pressed in the view.
@@ -70,8 +71,8 @@ public class EffectsConfigScr extends Activity {
         alert.setTitle("Enter File Name:");
         alert.setView(promptView);
         final EditText input = (EditText) promptView.findViewById(R.id.userInput);
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(input, InputMethodManager.SHOW_FORCED);
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY); // show
         alert.setCancelable(false)
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     //IF THE USER CLICKED ON SAVE BUTTON
@@ -85,6 +86,7 @@ public class EffectsConfigScr extends Activity {
                             promptUserForExportFileName();
                         } else {
                             Toast.makeText(EffectsConfigScr.this, "The " + filename + " file is exported to the recording library!", Toast.LENGTH_SHORT).show();
+                            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide
                             //Log.d(InitialScr.LOG_TAG, "The file name is: " + filename);
                             //audioFile = recorder.save(filename);
                             //fileManager.
@@ -97,11 +99,11 @@ public class EffectsConfigScr extends Activity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Canceled.
                         dialog.cancel();
+                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide
                     }
                 });
         alert.show();
     }
-
 
 
     // Restart button click event handler

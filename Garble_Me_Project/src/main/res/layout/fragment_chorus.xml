@@ -3,7 +3,7 @@
         android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
     <TableRow
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:layout_marginTop="50dp">
+            android:layout_height="fill_parent" android:layout_marginTop="30dp">
         <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
     </TableRow>
     <TableRow
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:layout_marginTop="50dp">
+            android:layout_height="fill_parent" android:layout_marginTop="30dp">
         <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
     </TableRow>
     <TableRow
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:layout_marginTop="50dp">
+            android:layout_height="fill_parent" android:layout_marginTop="30dp">
         <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/wet"
                   android:text="Wet" android:editable="false"
                   android:layout_alignTop="@+id/wetBar"/>
@@ -34,7 +34,7 @@
     </TableRow>
     <TableRow
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:layout_marginTop="50dp">
+            android:layout_height="fill_parent" android:layout_marginTop="30dp">
         <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/dry"
                   android:text="Dry"
                   android:editable="false"/>
@@ -43,7 +43,7 @@
     </TableRow>
     <TableRow
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:layout_marginTop="50dp">
+            android:layout_height="fill_parent" android:layout_marginTop="30dp">
         <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/feedBack"
                   android:text="FeedBack"
                   android:editable="false"/>

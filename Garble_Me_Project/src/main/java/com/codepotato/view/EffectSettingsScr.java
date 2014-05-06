@@ -211,6 +211,8 @@ public class EffectSettingsScr extends Activity {
             public void onClick(View v) {
                 // Perform action on click
                 saveEffect();
+                Log.d(InitialScr.LOG_TAG, "effectID: " + currentEffectID);
+                finish();
             }
         });
     }
