@@ -17,7 +17,10 @@ import com.codepotato.controller.FileManager;
 import java.io.*;
 import java.util.HashMap;
 
-
+/**
+ * Activity for adding/deleting effects; playback of recorded audio file.
+ *
+ */
 public class EffectsConfigScr extends Activity {
 
     public static AudioController audioController;
@@ -50,13 +53,17 @@ public class EffectsConfigScr extends Activity {
         }
     }
 
-    // Add button click event handler
+    /**
+     * Add button click event handler
+     */
     public void addButtonOnClick(View V) {
         Intent intent = new Intent(EffectsConfigScr.this, EffectSettingsScr.class);
         startActivityForResult(intent, ADD_EFFECT_REQUEST);
     }
 
-    // Export button click event handler
+    /**
+     * Export button click event handler
+     */
     public void exportButtonOnClick(View V) {
         promptUserForExportFileName();
     }
@@ -67,12 +74,12 @@ public class EffectsConfigScr extends Activity {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View promptView = layoutInflater.inflate(R.layout.activity_filename_prompt, null);
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(this); //
+        AlertDialog.Builder alert = new AlertDialog.Builder(this); // trigger a alert dialog
         alert.setTitle("Enter File Name:");
         alert.setView(promptView);
         final EditText input = (EditText) promptView.findViewById(R.id.userInput);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY); // show
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY); // show the soft keyboard
         alert.setCancelable(false)
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     //IF THE USER CLICKED ON SAVE BUTTON
@@ -105,8 +112,9 @@ public class EffectsConfigScr extends Activity {
         alert.show();
     }
 
-
-    // Restart button click event handler
+    /**
+     * Restart button click event handler
+     */
     public void restartButtonOnClick(View V) {
         try {
             audioController.returnPlayerToBeginning();
@@ -116,6 +124,9 @@ public class EffectsConfigScr extends Activity {
         }
     }
 
+    /**
+     * Construct the audio player bar
+     */
     public void initAudioPlayerBar() {
         // SeekBar for the audio player
         audioPlayerBar = (SeekBar) findViewById(R.id.audioPlayerBar);
@@ -141,6 +152,9 @@ public class EffectsConfigScr extends Activity {
         });
     }
 
+    /**
+     * Receive the result from EffectSettingsScr and apply appropriate actions
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_EFFECT_REQUEST) {
             if (resultCode == RESULT_OK) {
@@ -178,7 +192,9 @@ public class EffectsConfigScr extends Activity {
         }
     }//onActivityResult
 
-    // Create dynamic buttons
+    /**
+     * Create dynamic buttons
+     */
     public void createButtons(Intent intent) {
         final int effectID = Integer.parseInt(intent.getStringExtra("AudioEffectID"));
         Log.d(InitialScr.LOG_TAG, "Added AudioEffectID: " + intent.getStringExtra("AudioEffectID"));
@@ -255,6 +271,9 @@ public class EffectsConfigScr extends Activity {
         //fileManager = new FileManager();
     }
 
+    /**
+     * Function for converting an assets file to a File Object
+     */
     private void InputStreamToFile(InputStream is, File file) {
         OutputStream os = null;
 
@@ -288,11 +307,17 @@ public class EffectsConfigScr extends Activity {
         }
     }
 
+    /**
+     * Function to start playing an audio file
+     */
     public void startPlayingAudio() {
         audioController.play();
         myHandler.postDelayed(updateAudioPlayerBar, 5);
     }
 
+    /**
+     * Function to stop playing an audio file
+     */
     public void stopPlayingAudio() {
         audioController.pause();
         myHandler.removeCallbacks(updateAudioPlayerBar); //stops the seekBar update
@@ -334,6 +359,9 @@ public class EffectsConfigScr extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * End the audioController thread if it exists on "Back" key press
+     */
     @Override
     public void onBackPressed() {
         // do something on back.

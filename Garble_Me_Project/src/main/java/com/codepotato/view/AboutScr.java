@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
+/**
+ * Activity for displaying the Development Team, Project Background, Licenses info.
+ */
 public class AboutScr extends Activity {
 
     @Override

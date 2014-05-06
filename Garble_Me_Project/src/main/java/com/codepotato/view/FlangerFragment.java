@@ -11,6 +11,7 @@ import com.codepotato.model.effects.Effect;
 import com.codepotato.model.effects.FlangerEffect;
 
 /**
+ * Fragment for the Flanger item on drop-down menu
  * Created by terrywong on 4/25/14.
  */
 public class FlangerFragment extends Fragment {
@@ -21,6 +22,7 @@ public class FlangerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_flanger, container, false);
+
         // SeekBar for the rateBar
         SeekBar rateBar = (SeekBar) view.findViewById(R.id.rateBar);
         if (effect != null)
@@ -45,6 +47,7 @@ public class FlangerFragment extends Fragment {
             }
         });
 
+        // SeekBar for the depthBar
         SeekBar depthBar = (SeekBar) view.findViewById(R.id.depthBar);
         if (effect != null)
             depthBar.setProgress(effect.getDepth());
@@ -68,6 +71,7 @@ public class FlangerFragment extends Fragment {
             }
         });
 
+        // SeekBar for the wetBar
         SeekBar wetBar = (SeekBar) view.findViewById(R.id.wetBar);
         if (effect != null)
             wetBar.setProgress(effect.getWetGain());
@@ -91,6 +95,7 @@ public class FlangerFragment extends Fragment {
             }
         });
 
+        // SeekBar for the dryBar
         SeekBar dryBar = (SeekBar) view.findViewById(R.id.dryBar);
         if (effect != null)
             dryBar.setProgress(effect.getDryGain());
@@ -114,6 +119,7 @@ public class FlangerFragment extends Fragment {
             }
         });
 
+        // SeekBar for the feedbackBar
         SeekBar feedbackBar = (SeekBar) view.findViewById(R.id.feedbackBar);
         if (effect != null)
             feedbackBar.setProgress(effect.getFeedbackGain());
@@ -140,12 +146,17 @@ public class FlangerFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * set an associated effect to the fragment
+     */
     public void setEffect(Effect effect) {
         this.effect = (FlangerEffect) effect;
         Log.d(InitialScr.LOG_TAG, "Effect is set!");
     }
 
+    /**
+     * return the associated effect from the fragment
+     */
     public Effect getEffect() {
         return (Effect) effect;
     }

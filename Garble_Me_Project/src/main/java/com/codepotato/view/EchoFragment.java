@@ -11,6 +11,7 @@ import com.codepotato.model.effects.EchoEffect;
 import com.codepotato.model.effects.Effect;
 
 /**
+ * Fragment for the Echo item on drop-down menu
  * Created by terrywong on 4/24/14.
  */
 public class EchoFragment extends Fragment {
@@ -45,6 +46,8 @@ public class EchoFragment extends Fragment {
                 }
             }
         });
+
+        // SeekBar for the wetBar
         SeekBar wetBar = (SeekBar) view.findViewById(R.id.wetBar);
         if (effect != null)
             wetBar.setProgress(effect.getWetGain());
@@ -68,6 +71,7 @@ public class EchoFragment extends Fragment {
             }
         });
 
+        // SeekBar for the dryBar
         SeekBar dryBar = (SeekBar) view.findViewById(R.id.dryBar);
         if (effect != null)
             dryBar.setProgress(effect.getDryGain());
@@ -91,6 +95,7 @@ public class EchoFragment extends Fragment {
             }
         });
 
+        // SeekBar for the feedbackBar
         SeekBar feedbackBar = (SeekBar) view.findViewById(R.id.feedbackBar);
         if (effect != null)
             feedbackBar.setProgress(effect.getFeedbackGain());
@@ -117,11 +122,17 @@ public class EchoFragment extends Fragment {
         return view;
     }
 
+    /**
+     * set an associated effect to the fragment
+     */
     public void setEffect(Effect effect) {
         this.effect = (EchoEffect) effect;
         Log.d(InitialScr.LOG_TAG, "Effect is set!");
     }
 
+    /**
+     * return the associated effect from the fragment
+     */
     public Effect getEffect() {
         return (Effect) effect;
     }

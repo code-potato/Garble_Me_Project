@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
+ * Fragment for the Select item on drop-down menu
  * Created by terrywong on 4/25/14.
  */
 public class SelectFragment extends Fragment {

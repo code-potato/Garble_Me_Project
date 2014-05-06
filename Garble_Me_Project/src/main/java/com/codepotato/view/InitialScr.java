@@ -19,6 +19,10 @@ import com.codepotato.model.Recorder;
 
 import java.io.File;
 
+/**
+ * Main activity that enables recording
+ * a new audio file and counting the time elapsed.
+ */
 public class InitialScr extends Activity {
 
     public static final String LOG_TAG = "CodePotato"; //for debugging purposes
@@ -50,6 +54,9 @@ public class InitialScr extends Activity {
         }
     }
 
+    /**
+     * Function for starting to record
+     */
     private void startRecording() {
         File filepath = this.getFilesDir();  //returns us the root of the apps private sandboxed directory
         recorder = new Recorder(filepath);
@@ -60,12 +67,18 @@ public class InitialScr extends Activity {
         myHandler.postDelayed(updateTimer, 1000); //sends an updateTimer thread to the messageQueue after 1 second
     }
 
+    /**
+     * Function for stopping to record
+     */
     private void stopRecording() {
         recorder.stop();
         myHandler.removeCallbacks(updateTimer); //removes any threads in the MessageQueue of type updateTimer. This essentially stops the timer.
         promptUserForSaveFileName();//prompts user for File Name via an Alert Dialogue box.
     }
 
+    /**
+     * Function for filename prompt
+     */
     private void promptUserForSaveFileName() {
 
         // get activity_filename_prompt.xml view
@@ -77,7 +90,7 @@ public class InitialScr extends Activity {
         alert.setView(promptView);
         final EditText input = (EditText) promptView.findViewById(R.id.userInput);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY); // show
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY); // show the soft keyboard
         alert.setCancelable(false)
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     //IF THE USER CLICKED ON SAVE BUTTON
@@ -92,7 +105,7 @@ public class InitialScr extends Activity {
                         } else {
                             Log.d(LOG_TAG, "The file name is: " + filename);
                             audioFile = recorder.save(filename);
-                            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide
+                            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide the soft keyboard
                             textTimer.setText("00:00");
                             Intent intent = new Intent(InitialScr.this, EffectsConfigScr.class);
                             /* An Intent can carry a payload of various data types as key-value pairs called extras.
@@ -108,7 +121,7 @@ public class InitialScr extends Activity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Canceled.
                         dialog.cancel();
-                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide
+                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide the soft keyboard
                         textTimer.setText("00:00");
                     }
                 });
@@ -164,8 +177,8 @@ public class InitialScr extends Activity {
             if (minutes < 10)
                 minutesPrefix = "0";
             textTimer.setText(minutesPrefix + minutes + ":"
-                    + String.format("%02d", seconds));
-            myHandler.postDelayed(this, 1000);  //wait a second, then send this thread instance to the MessageQue to be executed again
+                    + String.format("%02d", seconds)); // output the elapsed time in "00:00" format
+            myHandler.postDelayed(this, 1000);  // wait a second, then send this thread instance to the MessageQue to be executed again
         }
     };
 

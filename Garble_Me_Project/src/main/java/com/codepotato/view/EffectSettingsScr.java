@@ -19,7 +19,9 @@ import com.codepotato.model.effects.FlangerEffect;
 
 import java.util.HashMap;
 
-
+/**
+ * Activity for setting parameters for a specific effect
+ */
 public class EffectSettingsScr extends Activity {
     private Spinner spinner;
     private HashMap<String, String> effectsList;
@@ -90,7 +92,9 @@ public class EffectSettingsScr extends Activity {
         }
     }
 
-    // Function for updating an effect's parameters
+    /*
+     * Function for updating an effect's parameters
+     */
     private void updateEffect(Effect effect) {
         if (effect instanceof EchoEffect) {
             EchoEffect echoEffect = (EchoEffect) effect;
@@ -192,6 +196,7 @@ public class EffectSettingsScr extends Activity {
             } else if (effect instanceof FlangerEffect) {
                 spinner.setSelection(3); //Flanger is at item 3
             }
+            // Initialize the fragment
             replaceFragment(effect);
             currentEffectID = loadedEffectID;
             effectLoaded = true;
@@ -204,12 +209,13 @@ public class EffectSettingsScr extends Activity {
                 Log.d(InitialScr.LOG_TAG, "com.codepotato.model.effects." + effectClassName + " didn't get created!");
                 e.printStackTrace();
             }
+            // Initialize the fragment
             replaceFragment(effect);
         }
         final Button saveButton = (Button) findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
+                // Save the effect and exit current activity on click
                 saveEffect();
                 Log.d(InitialScr.LOG_TAG, "effectID: " + currentEffectID);
                 finish();
@@ -217,7 +223,7 @@ public class EffectSettingsScr extends Activity {
         });
     }
 
-    /* Change the parameters of sliders
+    /* Load the parameters of sliders
      * with previously saved parameters
      * when user presses a specific effect
      * or with default parameters
@@ -273,6 +279,9 @@ public class EffectSettingsScr extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Save the effect on "Back" key press
+     */
     @Override
     public void onBackPressed() {
         // do something on back.
