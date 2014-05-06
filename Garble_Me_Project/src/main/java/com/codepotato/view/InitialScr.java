@@ -56,7 +56,7 @@ public class InitialScr extends Activity {
         //Starts the Stopwatch/Timer
         elapsedTime = 0L;
         startTime = SystemClock.uptimeMillis();
-        myHandler.postDelayed(updateTimer, 1000); //sends an updateTimer thread to the messageQueue after 1 second
+        myHandler.postDelayed(updateTimer, 1000); //sends an updateTimer thread to the messageQueue after 1 second(yes, you can send runnable/threads to the M queue)
     }
 
     private void stopRecording() {

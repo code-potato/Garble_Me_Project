@@ -2,6 +2,7 @@ package com.codepotato.view;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 
 
 public class EffectsConfigScr extends Activity {
-
+    private static final String LOGTAG= "CodePotatoEffectsConfigScr";
     public static AudioController audioController;
     private File audioFile;
     private String filepath;
@@ -84,7 +85,9 @@ public class EffectsConfigScr extends Activity {
                             dialog.dismiss();
                             promptUserForExportFileName();
                         } else {
-                            Toast.makeText(EffectsConfigScr.this, "The " + filename + " file is exported to the recording library!", Toast.LENGTH_SHORT).show();
+                            convertProgress(); //handles the conversion and progress of the
+
+                            //Toast.makeText(EffectsConfigScr.this, "The " + filename + " file is exported to the recording library!", Toast.LENGTH_SHORT).show();
                             //Log.d(InitialScr.LOG_TAG, "The file name is: " + filename);
                             //audioFile = recorder.save(filename);
                             //fileManager.
@@ -102,7 +105,19 @@ public class EffectsConfigScr extends Activity {
         alert.show();
     }
 
+    public void convertProgress(){
+        ConvertProgressDialog progressDialog= new ConvertProgressDialog(); //create an instance of my custom Alert View fragment/Dialog
+        FragmentManager fragmentManager= getFragmentManager();
+        progressDialog.show(fragmentManager, "Wav Progress"); // show the dialog
 
+        //forces the progressDialog obj to instantiate all its variables, otherwise I get a freakin' nullpointer exception
+        fragmentManager.executePendingTransactions();
+
+        //ProgressBar progressBar = progressDialog.getProgressBar(); //the progress bar attached to the dialog
+        //progressBar.setProgress(50);
+        progressDialog.setProgressBar(70);
+        //Log.d(LOGTAG, "Progress bar not set to 50");
+    }
 
     // Restart button click event handler
     public void restartButtonOnClick(View V) {
