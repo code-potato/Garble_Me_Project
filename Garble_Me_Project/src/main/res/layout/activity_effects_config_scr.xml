@@ -13,14 +13,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/addButton" android:gravity="top"
-            android:background="@drawable/add_button" android:layout_alignParentTop="true"
+            android:background="@drawable/add_button"
             android:layout_toLeftOf="@+id/playButton" android:onClick="addButtonOnClick"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/exportButton" android:gravity="top" android:layout_alignBottom="@+id/addButton"
-            android:layout_toRightOf="@+id/playButton" android:layout_alignParentTop="true"
-            android:background="@drawable/export_button" android:onClick="exportButtonOnClick"/>
+            android:layout_toRightOf="@+id/playButton"
+            android:background="@drawable/export_button" android:onClick="exportButtonOnClick"
+            />
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

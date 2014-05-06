@@ -351,17 +351,11 @@ public class EffectsConfigScr extends Activity {
         public void run() {
             audioPlayerBar.setProgress(audioController.currAudioPosition());
             //Log.d(InitialScr.LOG_TAG, "Audio controller position:" + audioController.currAudioPosition());
-            /*if (audioController.isPlaying() && audioController.currAudioPosition() == 100) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-                stopPlayingAudio();
+            if (!audioController.isPlaying()) {
                 playToggle.setChecked(false);
                 playToggle.setBackgroundDrawable(playToggle.getContext().getResources().getDrawable(R.drawable.play_button)); //changes the buttons background image
                 return;
-            }*/
+            }
             myHandler.postDelayed(this, 5);
         }
     };
