@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="about">About Us</string>
     <string name="app_name">Garble_Me</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -11,6 +11,11 @@
     <string name="title_activity_about_scr">AboutScr</string>
     <string name="ToggleButton">ToggleButton</string>
     <string name="filename1">filename1</string>
+    <string name="the_team">Code Potato is a collaborative effort from Terry Wong, Michael Santer, Steven Senatori, David
+     Hua, Jung Hwan Kim, and Rachel Sershon.</string>
+    <string name="purpose">This application has been created as work for a class in Advanced Object-Oriented Programming at
+    San Francisco State University.</string>
+    <string name="license">More specific information regarding licensing will be added here.</string>
 
     <string-array name="effects_array">
         <item>Select</item>
