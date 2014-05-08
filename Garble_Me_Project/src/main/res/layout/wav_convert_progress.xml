@@ -9,8 +9,7 @@
             android:layout_width="142dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="0%"
-            android:id="@+id/textView" android:layout_gravity="center_horizontal" android:layout_marginTop="20dp"
+            android:id="@+id/progressText" android:layout_gravity="center_horizontal" android:layout_marginTop="20dp"
             android:gravity="center" android:layout_weight="0.02"/>
     <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"
