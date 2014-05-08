@@ -4,13 +4,16 @@ import android.content.Context;
 
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import com.codepotato.model.EffectChainFactory;
 import com.codepotato.model.Recorder;
 import com.codepotato.model.SampleReader;
 import com.codepotato.model.EffectChain;
+import com.codepotato.view.ConvertProgressDialog;
 
 
 import java.io.*;
@@ -19,25 +22,68 @@ import java.util.StringTokenizer;
 /**
  * Created by senatori on 4/20/14.
  */
-public class FileManager implements Runnable{
+public class FileManager extends AsyncTask<Object, Integer, Void> {
     private static final String LOGTAG = "CodePotatoFileManager";
     //Audio format related variables
     private static final int SAMPLERATE = 44100; //Hz
     private static final int NUM_CHANNELS = 1;
     private static final int BITRATE = 16;
 
-    private Thread wavConvertExportThread;
-    Handler ecsHandler;
-    Context tmpContext; //will only be used for a function call in the thread. The context actually pertains to the effects config activity
+    ConvertProgressDialog progressDialog; //for editing the wav conversion progress AlertView. Via API magic, this will run in the GUI thread
+    private Context tmpContext; //will only be used for a function call in the thread. The context actually pertains to the effects config activity
     File tmpAudioFile;
+
     private EffectChain effectChain;
 
     public FileManager() {
-        //effectChain= EffectChainFactory.initEffectChain(); //this was just for testing
+        effectChain= EffectChainFactory.initEffectChain(); //this was just for testing
         //effectChain.addEffect(new EchoEffect());
-        wavConvertExportThread = new Thread(this, "Wave Convert And Export Thread");
+        // wavConvertExportThread = new Thread(this, "Wave Convert And Export Thread");
 
 
+    }
+
+    /**
+     * Override this method to perform a computation on a background thread. The
+     * specified parameters are the parameters passed to {@link #execute}
+     * by the caller of this task.
+     * <p/>
+     * This method can call {@link #publishProgress} to publish updates
+     * on the UI thread.
+     *
+     * @param params The parameters of the task.
+     * @return A result, defined by the subclass of this task.
+     * @see #onPreExecute()
+     * @see #onPostExecute
+     * @see #publishProgress
+     */
+    @Override
+    protected Void doInBackground(Object... params) {
+        progressDialog= (ConvertProgressDialog) params[0];
+        tmpContext= (Context) params[1];
+        tmpAudioFile= (File) params[2];
+
+        try {
+            this.exportAsWav(tmpAudioFile, tmpContext);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values){
+        progressDialog.setProgressBar(values[0]);
+    }
+
+
+    protected void onPostExecute(Void result){
+        progressDialog.dismiss();
+        tmpContext= null;
+
+        //return true;
     }
 
     /**
@@ -102,92 +148,7 @@ public class FileManager implements Runnable{
         return list;
     }
 
-    /**
-     * Converts a raw file to WAV and moves it to the Android Music Directory.
-     * @param rawFile The File object representing the raw file to be converted and exported.
-     * @param appContext an instance of the Application context. Can be retrieved by Context.getApplicationContext in a
-     *                   GUI Activity Class via this.getApplicationContext.
-     * @return true if file was successfully exported (propt user to let them know, etc)
-     */
-    private boolean exportToExternalMusicDir(File rawFile, Context appContext){
 
-
-        File wavFile;
-        try {
-            wavFile= this.convertToWavFile(rawFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        String stringState = Environment.getExternalStorageState(); //to make sure that there is an SD or emulated SD
-
-        File path;
-
-        File externalWavFile= new File(wavFile.getParent());
-        boolean overalSuccess= true;
-
-        int WRITE_BUFF_SIZE = 10000;
-        if(Environment.MEDIA_MOUNTED.equals(stringState)){
-
-            Log.d(LOGTAG, "File path before retreriving external Dir : "+ externalWavFile.toString());
-            path = (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsoluteFile()); //returns the path of the Android Music Dir
-
-            File garbleMeDirectory= new File(path, "GarbleMe"); //A folder in the Android Music dir to put the wav files
-            if(!garbleMeDirectory.exists()){  //create Dir if it doesn't exist
-                overalSuccess = garbleMeDirectory.mkdirs(); //returns false if directory creation failed
-                //Log.d(LOGTAG, "Attempt to create dir: " + Boolean.toString(overalSuccess));
-            }
-
-            externalWavFile = new File(garbleMeDirectory, wavFile.getName());
-            //Log.d(LOGTAG, "externalWavFile.toString: " + externalWavFile.toString() );
-
-            byte data_buffer [] = new byte[WRITE_BUFF_SIZE];
-            try{
-                FileInputStream fis= new FileInputStream(wavFile); //the wave file to be copied
-                FileOutputStream fos= new FileOutputStream(externalWavFile);
-                int bytesRead=0;
-
-                //copying file 10KB at a time via Input & Output streams
-                do {
-                    bytesRead = fis.read(data_buffer,0, WRITE_BUFF_SIZE);
-                    fos.write(data_buffer, 0, bytesRead);
-                }while(bytesRead == WRITE_BUFF_SIZE);  //if bytes read is less then buff size, that was the last read iteration
-
-                fos.close();
-                fis.close();
-
-                wavFile.delete(); //deletes the local wav file
-
-                //Log.d(LOGTAG, "externalWavFile size: " + Long.toString(externalWavFile.length()));
-
-            }catch(IOException ioe){
-                overalSuccess= false;
-                Log.d(LOGTAG, Log.getStackTraceString(ioe));
-                return overalSuccess;
-
-            }
-
-            // Tell the media scanner about the new file so that it is
-            // immediately available to the user. This snippet was taken verbatim from the Android Documentation
-            MediaScannerConnection.scanFile(appContext,
-                    new String[] { externalWavFile.toString() }, null,
-                    new MediaScannerConnection.OnScanCompletedListener() {
-                        public void onScanCompleted(String path, Uri uri) {
-                            Log.i("ExternalStorage", "Scanned " + path + ":");
-                            Log.i("ExternalStorage", "-> uri=" + uri);
-                        }
-                    });
-            appContext= null; //for garbage collection purposes.
-        }
-        else{
-            //external media/public storage is not mounted. This could be because the device's storage is already
-            //mounted to a computer by USB
-            overalSuccess= false;
-            return overalSuccess;
-        }
-        return overalSuccess;
-    }
 
     /**
      * Makes copy of a raw audio file in the .wav format. Is placed in the same directory as the raw file.
@@ -198,7 +159,7 @@ public class FileManager implements Runnable{
      * @see java.io.File
      */
 
-    private File convertToWavFile(File rawAudioFile)throws IOException{
+    private boolean exportAsWav(File rawAudioFile, Context appContext)throws IOException{
 
         int BUFF_SIZE= 10000; //10KB buffer
         //FileInputStream raw_in;
@@ -208,38 +169,82 @@ public class FileManager implements Runnable{
         int bytesRead = 0;
         int byteCountOffset = 0;
         long sampleCounter=0; //FOR DEBUGING PURPOSES
+
+        int totalBytesCounted=0; //to Track Progress
         boolean comparison= false;
-        Handler mHandler;
+        //Handler mHandler;
+        int filesize= (int)(rawAudioFile.length());
+        int one_percent = (int) (filesize * .01);
+        one_percent = (one_percent % 2) + one_percent; //make sure its even for modulus to work since loop increments by two;
+
+        int percentage_progress=0;
+
 
         //remove the .raw extension so we can add .wav
         String waveFileNameString = removeExtension(rawAudioFile);
         waveFileNameString= waveFileNameString.concat(".wav");
         Log.d(LOGTAG, "convertToWavFile filename: " + waveFileNameString);
         Log.d(LOGTAG, "raw filesize: " + Long.toString(rawAudioFile.length()));
-        //---------------
 
-        File wavFile = new File(rawAudioFile.getParent(), waveFileNameString); //TODO-senatori implement a method of deleting the file after it has been shared
+        //------------------Retrieve and Set up External Directory-------------------------------------------------------
+
+
+        String stringState = Environment.getExternalStorageState(); //to make sure that there is an SD or emulated SD
+        File path;
+
+        boolean overalSuccess= true;
+        File garbleMeDirectory;
+        if(Environment.MEDIA_MOUNTED.equals(stringState)) { //checks if we can access the SD
+
+            path = (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsoluteFile()); //returns the path of the Android Music Dir
+
+            garbleMeDirectory = new File(path, "GarbleMe"); //A folder in the Android Music dir to put the wav files
+            if (!garbleMeDirectory.exists()) {  //create Dir if it doesn't exist
+                overalSuccess = garbleMeDirectory.mkdirs(); //returns false if directory creation failed
+                //Log.d(LOGTAG, "Attempt to create dir: " + Boolean.toString(overalSuccess));
+                return false;
+            }
+        }
+        else
+            return false;
+
+        File wavFile = new File(garbleMeDirectory, waveFileNameString); //file will be located in Android music dir/GarbleMe
+        //-------------------------------------------------------------------------------------------------------------------
+
+        //************************PROCESSING AUDIO AND WRITING IT TO A FILE****************************************
         SampleReader sampleReader= new SampleReader(rawAudioFile, SAMPLERATE, 16, 1);
         //raw_in= new FileInputStream(rawAudioFile);
         wav_out= new FileOutputStream(wavFile);
 
         insertWaveFileHeader(wav_out, rawAudioFile);
-        //------------------------
+
         double sample;
         int bytesProcessed=0;
         while(true){ //Terminates after SampleReader.nextSample() returns 20 consecutive 0.0's
             try {
                 int zeroCounter=0; //keeps track of the 0.0 double values returned by nextSample() to determine if were at end of file
                 for(bytesProcessed = 0; bytesProcessed < BUFF_SIZE; bytesProcessed+= 2){ //in 16bit mono, a sample is 2 bytes. thus increment by 2
+
                     sample= sampleReader.nextSample();
                     sampleCounter++;
+                    totalBytesCounted+=2;
+
                     sample = effectChain.tickAll(sample); //run the sample through the effects
-                    //Log.d(LOGTAG, "Time: " + Long.toString(sampleCounter/44100)+  " EchoSample Val: "+ Double.toString(sample));
-                    //TODO-senatori The eof heuristic based code should probably be moved to another function for readability
+
+                    //********UPDATE PROGRESS HERE!!!!!
+                    if(((totalBytesCounted % one_percent)==0) && (percentage_progress<100)){ //TRUE every 1% of File read
+
+                        percentage_progress++;
+                        publishProgress(percentage_progress);
+
+
+                    }
+
+
                     //int comparison= Double.compare(0.0, sample); //if sample is equal to 0.0, it could be eof
                     comparison= Math.abs(sample)< 1E-8 ;
-                    if(comparison){ //so we check that there's been at least 20 consecutive zeros
-                        zeroCounter++;
+                    if(comparison){ //so we check if it's zero(or close enough to it)
+                        zeroCounter++; //if it is, we increment the counter. We want 120 of these zeros to determine if the echo/effect has diminished
                     }
                     else
                         zeroCounter=0; //we want consecutive 0.0's
@@ -247,16 +252,18 @@ public class FileManager implements Runnable{
                     if (zeroCounter == 120){ //EOF (this is a heuristical guess really)
                         break;
                     }
-                    //***** add effect chain based code here******
 
 
                     sampleReader.sampleToBytes(sample, data_buffer, bytesProcessed); //bytesProcessed is the offset
 
                 }
-                if (zeroCounter >= 120) //propagating the break through the loops
-                    break;
+                if (zeroCounter >= 120) {
+                    publishProgress(0);
+                    break; //propagating the break command through the loops
 
-                wav_out.write(data_buffer, 0, bytesProcessed); //writes BUFF_SIZE number of bytes ot the wav_out stream
+                }
+
+                wav_out.write(data_buffer, 0, bytesProcessed); //writes BUFF_SIZE(or bytesProcessed) number of bytes ot the wav_out stream
 
             }catch(IOException ioe){
                 //end of file handling
@@ -271,9 +278,24 @@ public class FileManager implements Runnable{
 
         }catch(IOException ioe){
             //add useless debug logcat statement here
+            overalSuccess= false;
+            return overalSuccess;
         }
 
-        return wavFile;
+        // Tell the media scanner about the new file so that it is
+        // immediately available to the user. This snippet was taken verbatim from the Android Documentation
+        MediaScannerConnection.scanFile(appContext,
+                new String[] { wavFile.toString() }, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.i("ExternalStorage", "Scanned " + path + ":");
+                        Log.i("ExternalStorage", "-> uri=" + uri);
+                    }
+                });
+        appContext= null; //for garbage collection purposes.
+
+
+        return overalSuccess;
     }
 
 
@@ -362,22 +384,19 @@ public class FileManager implements Runnable{
         return FileNameString;
     }
 
-    public void export(File audioFile, Context tmpContext){
+    /*public void export(File audioFile, Context tmpContext){
         this.tmpAudioFile = audioFile;
         this.tmpContext = tmpContext;
         ecsHandler= new Handler(Looper.getMainLooper()); //hopefully this will be used to send progress updates to the Activity/View thread
         wavConvertExportThread.start();
-    }
+    }*/
 
-    /**
-     * Starts executing the active part of the class' code. This method is
-     * called when a thread is started that has been created with a class which
-     * implements {@code Runnable}.
-     */
+    /*
+
     @Override
     public void run() {
         this.exportToExternalMusicDir(tmpAudioFile, tmpContext);
 
-    }
+    }*/
 }
 
