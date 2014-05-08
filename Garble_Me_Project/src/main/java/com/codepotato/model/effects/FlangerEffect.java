@@ -1,5 +1,7 @@
 package com.codepotato.model.effects;
 
+import android.util.Log;
+
 /**
  * Created by michael on 4/17/14.
  */
@@ -11,7 +13,7 @@ public class FlangerEffect extends TimeBasedEffect
     private double rate;
 
     final private double MAX_DEPTH = 15;
-    final private double MAX_RATE = 5;
+    final private double MAX_RATE = 3;
 
     private double tempDelay; // setting as an instance variable for efficiency reasons.
 
@@ -59,5 +61,6 @@ public class FlangerEffect extends TimeBasedEffect
     public void setRate(int percent) {
         rate = MAX_RATE * (double)percent / 100.;
         sin.setSinFreq(rate);
+        Log.d("Flange", "rate = " + rate);
     }
 }

@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Garble_Me.iml" filepath="$PROJECT_DIR$/Garble_Me.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Garble_Me Old.iml" filepath="$PROJECT_DIR$/Garble_Me Old.iml" />
       <module fileurl="file://$PROJECT_DIR$/Garble_Me_Project.iml" filepath="$PROJECT_DIR$/Garble_Me_Project.iml" />
       <module fileurl="file://$PROJECT_DIR$/Garble_Me_Project/Garble_Me_Project-Garble_Me_Project.iml" filepath="$PROJECT_DIR$/Garble_Me_Project/Garble_Me_Project-Garble_Me_Project.iml" />
     </modules>

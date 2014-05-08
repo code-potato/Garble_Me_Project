@@ -21,7 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/team"
-                android:text="@string/team"
+                android:text="@string/the_team"
                 android:textColor="#1f07ff"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:gravity="top"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/licenses"
-                android:text="@string/licenses"
+                android:text="@string/license"
                 android:gravity="bottom" android:textColor="#1f07ff"
                 android:editable="false"/>
     </TableRow>

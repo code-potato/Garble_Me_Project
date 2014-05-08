@@ -123,7 +123,7 @@ public class Player implements Runnable{
      * from 0-100
      */
     public int currPositionPercent(){
-        return Math.round(sampleReader.getPosition() / sampleReader.length() * 100);
+        return (int)Math.round((double)sampleReader.getPosition() / (double)sampleReader.length() * 100.);
     }
 
 }

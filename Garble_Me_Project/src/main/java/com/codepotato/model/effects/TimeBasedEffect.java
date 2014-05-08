@@ -13,7 +13,7 @@ abstract public class TimeBasedEffect extends Effect
     protected double dryGain;
     protected double feedbackGain;
 
-    protected final double MAX_DELAY_TIME = 2000;
+    protected final double MAX_DELAY_TIME = 1000;
     protected final double MAX_GAIN = 1;
 
     public int getDelayTime() {
