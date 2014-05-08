@@ -68,10 +68,10 @@ public class EffectsConfigScr extends Activity {
         FragmentManager fragmentManager= getFragmentManager();
         progressDialog.show(fragmentManager, "Wav Progress"); // show the dialog
 
-        asyncFileManager.execute(progressDialog, this.getApplicationContext(), audioFile);
-
         //forces the progressDialog obj to instantiate all its variables, otherwise I get a freakin' nullpointer exception
         fragmentManager.executePendingTransactions();
+        asyncFileManager.execute(progressDialog, this.getApplicationContext(), audioFile);
+
 
     }
 
