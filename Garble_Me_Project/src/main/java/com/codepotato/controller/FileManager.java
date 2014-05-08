@@ -186,7 +186,6 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
         //remove the .raw extension so we can add .wav
         String waveFileNameString = removeExtension(rawAudioFile);
         waveFileNameString= waveFileNameString.concat(".wav");
-        Log.d(LOGTAG, "convertToWavFile filename: " + waveFileNameString);
         Log.d(LOGTAG, "raw filesize: " + Long.toString(rawAudioFile.length()));
 
         //------------------Retrieve and Set up External Directory-------------------------------------------------------

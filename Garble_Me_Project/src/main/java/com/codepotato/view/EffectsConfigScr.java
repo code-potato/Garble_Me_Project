@@ -61,49 +61,6 @@ public class EffectsConfigScr extends Activity {
         convertProgress();
     }
 
-    private void promptUserForExportFileName() {
-
-        // get activity_initial_scr_prompt.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View promptView = layoutInflater.inflate(R.layout.activity_filename_prompt, null);
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this); //
-        alert.setTitle("Enter File Name:");
-        alert.setView(promptView);
-        final EditText input = (EditText) promptView.findViewById(R.id.userInput);
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(input, InputMethodManager.SHOW_FORCED);
-        alert.setCancelable(false)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    //IF THE USER CLICKED ON SAVE BUTTON
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String filename = String.valueOf(input.getText());
-                        if (filename.isEmpty()) {
-                            Toast toast = Toast.makeText(EffectsConfigScr.this, "You need to enter a file name!", Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
-                            dialog.dismiss();
-                            promptUserForExportFileName();
-                        } else {
-                            convertProgress(); //handles the conversion and progress of the
-
-                            //Toast.makeText(EffectsConfigScr.this, "The " + filename + " file is exported to the recording library!", Toast.LENGTH_SHORT).show();
-                            //Log.d(InitialScr.LOG_TAG, "The file name is: " + filename);
-                            //audioFile = recorder.save(filename);
-                            //fileManager.
-                            //fileManager.convertToWavFile(audioFile);
-                        }
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    // If the User clicked on the cancel button
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Canceled.
-                        dialog.cancel();
-                    }
-                });
-        alert.show();
-    }
 
     public void convertProgress(){
         FileManager asyncFileManager= new FileManager();
