@@ -58,7 +58,7 @@ public class EffectsConfigScr extends Activity {
 
     // Export button click event handler
     public void exportButtonOnClick(View V) {
-        promptUserForExportFileName();
+        convertProgress();
     }
 
     private void promptUserForExportFileName() {
@@ -106,17 +106,16 @@ public class EffectsConfigScr extends Activity {
     }
 
     public void convertProgress(){
+        FileManager asyncFileManager= new FileManager();
         ConvertProgressDialog progressDialog= new ConvertProgressDialog(); //create an instance of my custom Alert View fragment/Dialog
         FragmentManager fragmentManager= getFragmentManager();
         progressDialog.show(fragmentManager, "Wav Progress"); // show the dialog
 
+        asyncFileManager.execute(progressDialog, this.getApplicationContext(), audioFile);
+
         //forces the progressDialog obj to instantiate all its variables, otherwise I get a freakin' nullpointer exception
         fragmentManager.executePendingTransactions();
 
-        //ProgressBar progressBar = progressDialog.getProgressBar(); //the progress bar attached to the dialog
-        //progressBar.setProgress(50);
-        progressDialog.setProgressBar(70);
-        //Log.d(LOGTAG, "Progress bar not set to 50");
     }
 
     // Restart button click event handler

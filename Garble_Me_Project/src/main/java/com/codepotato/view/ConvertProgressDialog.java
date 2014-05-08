@@ -41,10 +41,6 @@ public class ConvertProgressDialog extends DialogFragment {
         return builder.create();
     }
 
-    //Getters/Setters
-    public ProgressBar getProgressBar() {
-        return progressBar;
-    }
 
     public void setProgressBar(int progress) {
         this.progressBar.setProgress(progress);
