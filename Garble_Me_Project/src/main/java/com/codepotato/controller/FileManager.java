@@ -43,48 +43,7 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
 
     }
 
-    /**
-     * Override this method to perform a computation on a background thread. The
-     * specified parameters are the parameters passed to {@link #execute}
-     * by the caller of this task.
-     * <p/>
-     * This method can call {@link #publishProgress} to publish updates
-     * on the UI thread.
-     *
-     * @param params The parameters of the task.
-     * @return A result, defined by the subclass of this task.
-     * @see #onPreExecute()
-     * @see #onPostExecute
-     * @see #publishProgress
-     */
-    @Override
-    protected Void doInBackground(Object... params) {
-        progressDialog= (ConvertProgressDialog) params[0];
-        tmpContext= (Context) params[1];
-        tmpAudioFile= (File) params[2];
 
-        try {
-            this.exportAsWav(tmpAudioFile, tmpContext);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-
-    }
-
-    @Override
-    protected void onProgressUpdate(Integer... values){
-        progressDialog.setProgressBar(values[0]);
-    }
-
-
-    protected void onPostExecute(Void result){
-        progressDialog.dismiss();
-        tmpContext= null;
-
-        //return true;
-    }
 
     /**
      * Deletes the raw audio file and its corresponding wav file (if it exists)
@@ -148,7 +107,51 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
         return list;
     }
 
+    /**
+     *
+     * equivalent to run() method in a runnable implementation. is called by the execute() method on the AsyncTask instance from the GUI Activity class
+     * This is so the logic can run it its own thread, and the GUI updates will run exclusively on the GUI thread. Android docs were adamant about that.
+     * @param params a Java varargs. you will pass (ConvertProgressDialog, Context, File) in that order.
+     */
+    @Override
+    protected Void doInBackground(Object... params) {
+        progressDialog= (ConvertProgressDialog) params[0];
+        tmpContext= (Context) params[1];
+        tmpAudioFile= (File) params[2];
 
+        try {
+            this.exportAsWav(tmpAudioFile, tmpContext);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
+    /**
+     * Called via publishProgress() method in/during the doInBackground() execution thread
+     * @param values a java vararg. only past it a single Integer value ranging from 0-100 representing progress
+     */
+    @Override
+    protected void onProgressUpdate(Integer... values){
+        progressDialog.setProgressBar(values[0]);
+    }
+
+
+    protected void onPostExecute(Void result){
+        progressDialog.dismiss();
+        tmpContext= null;
+
+        //return true;
+    }
+
+    /**
+     * Called when the user triggered a cancel() event on the AsyncTask instance.
+     */
+    protected void onCancelled(){
+        tmpContext=null;
+    }
 
     /**
      * Makes copy of a raw audio file in the .wav format. Is placed in the same directory as the raw file.
@@ -220,7 +223,7 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
 
         double sample;
         int bytesProcessed=0;
-        while(true){ //Terminates after SampleReader.nextSample() returns 20 consecutive 0.0's
+        while(!isCancelled()){ //Terminates after effects go full quieting or user triggers a cancel event on the event sync instance
             try {
                 int zeroCounter=0; //keeps track of the 0.0 double values returned by nextSample() to determine if were at end of file
                 for(bytesProcessed = 0; bytesProcessed < BUFF_SIZE; bytesProcessed+= 2){ //in 16bit mono, a sample is 2 bytes. thus increment by 2
@@ -232,7 +235,7 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
                     sample = effectChain.tickAll(sample); //run the sample through the effects
 
                     //********UPDATE PROGRESS HERE!!!!!
-                    if(((totalBytesCounted % one_percent)==0) && (percentage_progress<100)){ //TRUE every 1% of File read
+                    if(((totalBytesCounted % one_percent)==0) && (percentage_progress<=100)){ //TRUE every 1% of File read
 
                         percentage_progress++;
                         publishProgress(percentage_progress);
@@ -258,7 +261,7 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
 
                 }
                 if (zeroCounter >= 120) {
-                    publishProgress(0);
+
                     break; //propagating the break command through the loops
 
                 }

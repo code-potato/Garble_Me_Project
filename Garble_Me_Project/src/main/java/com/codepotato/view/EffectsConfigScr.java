@@ -107,7 +107,7 @@ public class EffectsConfigScr extends Activity {
 
     public void convertProgress(){
         FileManager asyncFileManager= new FileManager();
-        ConvertProgressDialog progressDialog= new ConvertProgressDialog(); //create an instance of my custom Alert View fragment/Dialog
+        ConvertProgressDialog progressDialog= new ConvertProgressDialog(asyncFileManager); //create an instance of my custom Alert View fragment/Dialog
         FragmentManager fragmentManager= getFragmentManager();
         progressDialog.show(fragmentManager, "Wav Progress"); // show the dialog
 
