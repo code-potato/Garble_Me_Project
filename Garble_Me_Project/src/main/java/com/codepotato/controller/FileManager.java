@@ -9,11 +9,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 import com.codepotato.model.EffectChainFactory;
 import com.codepotato.model.Recorder;
 import com.codepotato.model.SampleReader;
 import com.codepotato.model.EffectChain;
 import com.codepotato.view.ConvertProgressDialog;
+import com.codepotato.view.R;
 
 
 import java.io.*;
@@ -21,6 +23,7 @@ import java.util.StringTokenizer;
 
 /**
  * Created by senatori on 4/20/14.
+ *
  */
 public class FileManager extends AsyncTask<Object, Integer, Void> {
     private static final String LOGTAG = "CodePotatoFileManager";
@@ -112,6 +115,7 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
      * equivalent to run() method in a runnable implementation. is called by the execute() method on the AsyncTask instance from the GUI Activity class
      * This is so the logic can run it its own thread, and the GUI updates will run exclusively on the GUI thread. Android docs were adamant about that.
      * @param params a Java varargs. you will pass (ConvertProgressDialog, Context, File) in that order.
+     * @see android.os.AsyncTask
      */
     @Override
     protected Void doInBackground(Object... params) {
@@ -131,7 +135,7 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
 
     /**
      * Called via publishProgress() method in/during the doInBackground() execution thread
-     * @param values a java vararg. only past it a single Integer value ranging from 0-100 representing progress
+     * @param values a java vararg. only pass it a single Integer value ranging from 0-100 representing progress
      */
     @Override
     protected void onProgressUpdate(Integer... values){
@@ -141,6 +145,11 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
 
     protected void onPostExecute(Void result){
         progressDialog.dismiss();
+
+        CharSequence text = tmpContext.getText(R.string.export_toast);
+        Toast toast = Toast.makeText(tmpContext, text, Toast.LENGTH_SHORT);
+        toast.show();
+
         tmpContext= null;
 
         //return true;
@@ -198,7 +207,7 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
         File garbleMeDirectory;
         if(Environment.MEDIA_MOUNTED.equals(stringState)) { //checks if we can access the SD
 
-            path = (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsoluteFile()); //returns the path of the Android Music Dir
+            path = (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES).getAbsoluteFile()); //returns the path of the Android Music Dir
 
             garbleMeDirectory = new File(path, "GarbleMe"); //A folder in the Android Music dir to put the wav files
             if (!garbleMeDirectory.exists()) {  //create Dir if it doesn't exist
