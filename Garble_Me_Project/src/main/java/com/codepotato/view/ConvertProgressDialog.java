@@ -14,7 +14,10 @@ import android.widget.TextView;
 import com.codepotato.controller.FileManager;
 
 /**
+ * This class displays an AlertView with a progress bar. Very similar to ProgressDialog class in functionality. Inherits from
+ * Dialog Fragment, so youwill need to call its methods for displaying the Alert View.
  * Created by senatori on 5/6/14.
+ * @author Steven Senatori
  */
 public class ConvertProgressDialog extends DialogFragment {
 
@@ -22,6 +25,12 @@ public class ConvertProgressDialog extends DialogFragment {
     protected TextView textView;
     protected AsyncTask exportTask; //this will be the FileManager instance that is converting and exporting the raw file
 
+    /**
+     * Creates an instance of the ConvertProgressDialog. Does not display it. Call show() to have the alertview displayed.
+     * This class was intended to be only used for updating the raw to wav conversion progress.
+     *
+     * @param exportTask an instance of FileManager
+     */
     public ConvertProgressDialog(FileManager exportTask){
         this.exportTask= exportTask;
     }
@@ -48,7 +57,11 @@ public class ConvertProgressDialog extends DialogFragment {
         return builder.create();
     }
 
-
+    /**
+     * Sets the value of the progress bar. You should not have to call it. Call execute() on the FileManager instance with
+     * the params required by FileManager.doInBackground() instead for the progess to be updated automatically
+     * @param progress
+     */
     public void setProgressBar(int progress) {
         if(progress <= 99) {
             this.progressBar.setProgress(progress);
