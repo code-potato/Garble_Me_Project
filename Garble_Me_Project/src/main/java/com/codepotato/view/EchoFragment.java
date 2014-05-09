@@ -123,7 +123,9 @@ public class EchoFragment extends Fragment {
     }
 
     /**
-     * set an associated effect to the fragment
+     * Set an associated effect to the fragment
+     *
+     * @param effect
      */
     public void setEffect(Effect effect) {
         this.effect = (EchoEffect) effect;
@@ -131,7 +133,9 @@ public class EchoFragment extends Fragment {
     }
 
     /**
-     * return the associated effect from the fragment
+     * Return the associated effect from the fragment
+     *
+     * @return
      */
     public Effect getEffect() {
         return (Effect) effect;

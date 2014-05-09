@@ -1,16 +1,12 @@
 package com.codepotato.view;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.*;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.codepotato.controller.AudioController;
 import com.codepotato.controller.FileManager;
@@ -18,19 +14,24 @@ import com.codepotato.controller.FileManager;
 import java.io.*;
 import java.util.HashMap;
 
-
+/**
+ * Activity for:
+ * adding/removing effects to an audio file;
+ * playback of the audio file;
+ */
 public class EffectsConfigScr extends Activity {
-    private static final String LOGTAG= "CodePotatoEffectsConfigScr";
+    private static final String LOGTAG = "CodePotatoEffectsConfigScr";
     public static AudioController audioController;
     private File audioFile;
     private String filepath;
     static final int ADD_EFFECT_REQUEST = 1;  // The add request code
     static final int UPDATE_EFFECT_REQUEST = 2;  // The update request code
     SeekBar audioPlayerBar;
-    private FileManager fileManager;
     ToggleButton playToggle;
     private static HashMap<Integer, Button> buttons = new HashMap<Integer, Button>();
     private Handler myHandler = new Handler();
+    private static int NumOfEffects = 0;
+    private static final int MaxNumOfEffects = 10;
 
     /**
      * This function is called when the Play button is pressed in the view.
@@ -50,32 +51,51 @@ public class EffectsConfigScr extends Activity {
         }
     }
 
-    // Add button click event handler
+    /**
+     * Add button click event handler
+     *
+     * @param V
+     */
     public void addButtonOnClick(View V) {
-        Intent intent = new Intent(EffectsConfigScr.this, EffectSettingsScr.class);
-        startActivityForResult(intent, ADD_EFFECT_REQUEST);
+        if (NumOfEffects < MaxNumOfEffects) {
+            Intent intent = new Intent(EffectsConfigScr.this, EffectSettingsScr.class);
+            startActivityForResult(intent, ADD_EFFECT_REQUEST);
+        } else {
+            Toast toast = Toast.makeText(EffectsConfigScr.this, "You have reached the maximum number of effects!", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
     }
 
-    // Export button click event handler
+    /**
+     * Export button click event handler
+     *
+     * @param V
+     */
     public void exportButtonOnClick(View V) {
         convertProgress();
     }
 
-
-    public void convertProgress(){
-        FileManager asyncFileManager= new FileManager();
-        ConvertProgressDialog progressDialog= new ConvertProgressDialog(asyncFileManager); //create an instance of my custom Alert View fragment/Dialog
-        FragmentManager fragmentManager= getFragmentManager();
+    /**
+     * Function for displaying the conversion progress of "Export"
+     */
+    public void convertProgress() {
+        FileManager asyncFileManager = new FileManager();
+        ConvertProgressDialog progressDialog = new ConvertProgressDialog(asyncFileManager); //create an instance of my custom Alert View fragment/Dialog
+        FragmentManager fragmentManager = getFragmentManager();
         progressDialog.show(fragmentManager, "Wav Progress"); // show the dialog
 
         //forces the progressDialog obj to instantiate all its variables, otherwise I get a freakin' nullpointer exception
         fragmentManager.executePendingTransactions();
         asyncFileManager.execute(progressDialog, this.getApplicationContext(), audioFile);
 
-
     }
 
-    // Restart button click event handler
+    /**
+     * Restart button click event handler
+     *
+     * @param V
+     */
     public void restartButtonOnClick(View V) {
         try {
             audioController.returnPlayerToBeginning();
@@ -85,6 +105,9 @@ public class EffectsConfigScr extends Activity {
         }
     }
 
+    /**
+     * Function for constructing the audio player bar
+     */
     public void initAudioPlayerBar() {
         // SeekBar for the audio player
         audioPlayerBar = (SeekBar) findViewById(R.id.audioPlayerBar);
@@ -110,6 +133,14 @@ public class EffectsConfigScr extends Activity {
         });
     }
 
+    /**
+     * Function for operations on results returned from
+     * an effect settings
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_EFFECT_REQUEST) {
             if (resultCode == RESULT_OK) {
@@ -147,7 +178,11 @@ public class EffectsConfigScr extends Activity {
         }
     }//onActivityResult
 
-    // Create dynamic buttons
+    /**
+     * Function for creating dynamic buttons
+     *
+     * @param intent
+     */
     public void createButtons(Intent intent) {
         final int effectID = Integer.parseInt(intent.getStringExtra("AudioEffectID"));
         Log.d(InitialScr.LOG_TAG, "Added AudioEffectID: " + intent.getStringExtra("AudioEffectID"));
@@ -193,10 +228,14 @@ public class EffectsConfigScr extends Activity {
                     layout.removeView(effectButton);
                     buttons.remove(effectButton.getId());
                     audioController.removeEffect(effectButton.getId());
+                    NumOfEffects--;
                     Log.d(InitialScr.LOG_TAG, "Removed AudioEffectID: " + effectButton.getId());
+                    Log.d(InitialScr.LOG_TAG, "NumOfEffects: " + NumOfEffects);
                 }
             });
         }
+        NumOfEffects++;
+        Log.d(InitialScr.LOG_TAG, "NumOfEffects: " + NumOfEffects);
     }
 
     @Override
@@ -206,7 +245,7 @@ public class EffectsConfigScr extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         // Load recorded audio file
         audioFile = new File(getIntent().getStringExtra("AudioFilePath"));
-        // Use test audio file from assets instead
+        // Code to use test audio file from assets instead
         /*try {
             filepath = this.getFilesDir() + "/emma16.raw";
             Log.d("emma16.raw", filepath);
@@ -221,9 +260,14 @@ public class EffectsConfigScr extends Activity {
         fileNameText.setText("Filename: " + audioFile.getName());
         audioController = new AudioController(audioFile);
         initAudioPlayerBar();
-        //fileManager = new FileManager();
     }
 
+    /**
+     * Function to convert an InputStream to a File Object
+     *
+     * @param is
+     * @param file
+     */
     private void InputStreamToFile(InputStream is, File file) {
         OutputStream os = null;
 
@@ -257,11 +301,17 @@ public class EffectsConfigScr extends Activity {
         }
     }
 
+    /**
+     * Start playing the audio file
+     */
     public void startPlayingAudio() {
         audioController.play();
         myHandler.postDelayed(updateAudioPlayerBar, 5);
     }
 
+    /**
+     * Stop playing the audio file
+     */
     public void stopPlayingAudio() {
         audioController.pause();
         myHandler.removeCallbacks(updateAudioPlayerBar); //stops the seekBar update
@@ -319,10 +369,12 @@ public class EffectsConfigScr extends Activity {
      */
     private Runnable updateAudioPlayerBar = new Runnable() {
 
+        @Override
         public void run() {
             audioPlayerBar.setProgress(audioController.currAudioPosition());
             //Log.d(InitialScr.LOG_TAG, "Audio controller position:" + audioController.currAudioPosition());
             if (!audioController.isPlaying()) {
+                Log.d(InitialScr.LOG_TAG, "Is not playing: Audio controller position:" + audioController.currAudioPosition());
                 playToggle.setChecked(false);
                 playToggle.setBackgroundDrawable(playToggle.getContext().getResources().getDrawable(R.drawable.play_button)); //changes the buttons background image
                 return;

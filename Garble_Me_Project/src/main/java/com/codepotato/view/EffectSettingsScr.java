@@ -29,7 +29,7 @@ public class EffectSettingsScr extends Activity {
     private Integer currentEffectID = null;
     private boolean effectLoaded = false;
 
-    /*
+    /**
      * Function for saving the selected effect
      * and its parameters.
      */
@@ -92,8 +92,10 @@ public class EffectSettingsScr extends Activity {
         }
     }
 
-    /*
+    /**
      * Function for updating an effect's parameters
+     *
+     * @param effect
      */
     private void updateEffect(Effect effect) {
         if (effect instanceof EchoEffect) {
@@ -153,6 +155,7 @@ public class EffectSettingsScr extends Activity {
                     Effect effect = null;
                     String effectClassName = spinner.getSelectedItem().toString() + "Effect";
                     try {
+                        // Dynamically create an Effect class instance
                         effect = (Effect) (Class.forName("com.codepotato.model.effects." + effectClassName)).newInstance();
                         Log.d(InitialScr.LOG_TAG, "com.codepotato.view.effects." + effectClassName + " is created!");
                         if (currentEffectID == null) {
@@ -178,6 +181,7 @@ public class EffectSettingsScr extends Activity {
             }
 
         });
+        // Store the correct effect class names in a HashMap
         effectsList = new HashMap<String, String>();
         effectsList.put("Echo", "EchoEffect");
         effectsList.put("Chorus", "ChorusEffect");
@@ -223,15 +227,19 @@ public class EffectSettingsScr extends Activity {
         });
     }
 
-    /* Load the parameters of sliders
+    /**
+     * Load the parameters of sliders
      * with previously saved parameters
      * when user presses a specific effect
      * or with default parameters
      * when user changes the drop-down menu item.
+     *
+     * @param effect
      */
     public void replaceFragment(Effect effect) {
         String fragmentClassName = spinner.getSelectedItem().toString() + "Fragment";
         try {
+            // Dynamically create a Fragment class instance
             Fragment fragment = (Fragment) (Class.forName("com.codepotato.view." + fragmentClassName)).newInstance();
             Log.d(InitialScr.LOG_TAG, "com.codepotato.view." + fragmentClassName + " is created!");
             if (effect != null) {
