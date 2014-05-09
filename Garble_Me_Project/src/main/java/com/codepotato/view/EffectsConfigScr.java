@@ -374,7 +374,6 @@ public class EffectsConfigScr extends Activity {
             audioPlayerBar.setProgress(audioController.currAudioPosition());
             //Log.d(InitialScr.LOG_TAG, "Audio controller position:" + audioController.currAudioPosition());
             if (!audioController.isPlaying()) {
-                Log.d(InitialScr.LOG_TAG, "Is not playing: Audio controller position:" + audioController.currAudioPosition());
                 playToggle.setChecked(false);
                 playToggle.setBackgroundDrawable(playToggle.getContext().getResources().getDrawable(R.drawable.play_button)); //changes the buttons background image
                 return;
