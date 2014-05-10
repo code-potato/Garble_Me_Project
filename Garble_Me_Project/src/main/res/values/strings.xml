@@ -24,7 +24,7 @@
         <item>Flanger</item>
     </string-array>
 
-    <string name="export_toast">File Saved to the Ringtones directory on your phone</string>
+    <string name="export_toast">File Saved to the Android Music Garble Me directory</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
