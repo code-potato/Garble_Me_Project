@@ -89,8 +89,13 @@ public class RecordingLibraScr extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    // Creates a context Menu. Method is called when the user sends a long click event by long clicking on an recording/ListView element
+    /**
+     * Creates a context Menu. Method is called when the user sends a click event by long clicking on an recording/ListView element
+     *
+     * @param menu
+     * @param v
+     * @param menuInfo
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -104,7 +109,12 @@ public class RecordingLibraScr extends Activity {
         menu.add(1, 2, 2, "Delete");
     }
 
-    // This method is called when user selects an Item in the Context menu
+    /**
+     * This method is called when user selects an Item in the Context menu
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         int itemId = item.getItemId();

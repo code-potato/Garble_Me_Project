@@ -92,11 +92,7 @@ public class EffectSettingsScr extends Activity {
         }
     }
 
-    /**
-     * Function for updating an effect's parameters
-     *
-     * @param effect
-     */
+    // Function for updating an effect's parameters
     private void updateEffect(Effect effect) {
         if (effect instanceof EchoEffect) {
             EchoEffect echoEffect = (EchoEffect) effect;
@@ -227,16 +223,12 @@ public class EffectSettingsScr extends Activity {
         });
     }
 
-    /**
-     * Load the parameters of sliders
-     * with previously saved parameters
-     * when user presses a specific effect
-     * or with default parameters
-     * when user changes the drop-down menu item.
-     *
-     * @param effect
-     */
-    public void replaceFragment(Effect effect) {
+    // Load the parameters of sliders
+    // with previously saved parameters
+    // when user presses a specific effect
+    // or with default parameters
+    // when user changes the drop-down menu item.
+    private void replaceFragment(Effect effect) {
         String fragmentClassName = spinner.getSelectedItem().toString() + "Fragment";
         try {
             // Dynamically create a Fragment class instance

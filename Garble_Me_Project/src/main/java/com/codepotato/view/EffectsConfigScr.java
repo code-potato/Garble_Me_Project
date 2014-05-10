@@ -133,14 +133,8 @@ public class EffectsConfigScr extends Activity {
         });
     }
 
-    /**
-     * Function for operations on results returned from
-     * an effect settings
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
+    // Function for operations on results returned from
+    // an effect settings
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_EFFECT_REQUEST) {
             if (resultCode == RESULT_OK) {
@@ -262,12 +256,7 @@ public class EffectsConfigScr extends Activity {
         initAudioPlayerBar();
     }
 
-    /**
-     * Function to convert an InputStream to a File Object
-     *
-     * @param is
-     * @param file
-     */
+    // Function to convert an InputStream to a File Object
     private void InputStreamToFile(InputStream is, File file) {
         OutputStream os = null;
 
@@ -364,9 +353,7 @@ public class EffectsConfigScr extends Activity {
         this.finish();
     }
 
-    /**
-     * A seekBar thread for updating the AudioPlayerBar.
-     */
+    // A seekBar thread for updating the AudioPlayerBar.
     private Runnable updateAudioPlayerBar = new Runnable() {
 
         @Override
