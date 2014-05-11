@@ -29,11 +29,9 @@ public class EffectSettingsScr extends Activity {
     private Integer currentEffectID = null;
     private boolean effectLoaded = false;
 
-    /**
-     * Function for saving the selected effect
-     * and its parameters.
-     */
-    public void saveEffect() {
+    // Function for saving the selected effect
+    // and its parameters.
+    private void saveEffect() {
         String effectName = spinner.getSelectedItem().toString();
         String effectClassName = effectsList.get(effectName);
         Effect loadedEffect = null;
