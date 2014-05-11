@@ -9,9 +9,8 @@ import java.io.*;
 import java.nio.ByteBuffer;
 
 /**
- * Encapsulates an AudioRecord instance so it runs in its own recordingThread. None of the main AudioRecord methods are
- *
- * from this object.
+ * Encapsulates an AudioRecord instance so it runs in its own recordingThread. None of the main AudioRecord methods available
+ * via this class.
  *
  * @author Steven Senatori on 3/22/14.
  */

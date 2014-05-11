@@ -9,18 +9,24 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 import com.codepotato.model.EffectChainFactory;
 import com.codepotato.model.Recorder;
 import com.codepotato.model.SampleReader;
 import com.codepotato.model.EffectChain;
 import com.codepotato.view.ConvertProgressDialog;
+import com.codepotato.view.R;
 
 
 import java.io.*;
 import java.util.StringTokenizer;
 
 /**
- * Created by senatori on 4/20/14.
+ * FileManager class is sued for saving and loading the recorded audio files. Also can convert & export raw audio files to wav
+ * in its own thread by calling <b>execute()</b> on a FileManager instance.
+ *
+ * @author Steven Senatori
  */
 public class FileManager extends AsyncTask<Object, Integer, Void> {
     private static final String LOGTAG = "CodePotatoFileManager";
@@ -94,7 +100,7 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
 
     /**
      * Retrieves a String based list of the raw file's names
-     * @param appContext
+     * @param appContext the applications context. can be retrieved from an Activity via this.getApplicationContext
      * @return String[] list of raw file names
      */
     public String[] listRawFiles(Context appContext){
@@ -108,10 +114,13 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
     }
 
     /**
-     *
-     * equivalent to run() method in a runnable implementation. is called by the execute() method on the AsyncTask instance from the GUI Activity class
+     * Converts a raw file to wav and exports it to ringtones dir and displays it's progress to a ConvertProgressDialog view.
+     * <b>DO NOT DIRECTLY CALL THIS METHOD. You Invoke it by calling execute() on the instance and passing it the params required for this method. </b>
+     * equivalent to run() method in a runnable implementation. It is invoked by the execute() method on the AsyncTask instance from the GUI Activity class
      * This is so the logic can run it its own thread, and the GUI updates will run exclusively on the GUI thread. Android docs were adamant about that.
-     * @param params a Java varargs. you will pass (ConvertProgressDialog, Context, File) in that order.
+     * @param params a Java varargs. you will pass a(ConvertProgressDialog, Context, File) in that order.
+     * @see android.os.AsyncTask
+     * @see com.codepotato.view.ConvertProgressDialog
      */
     @Override
     protected Void doInBackground(Object... params) {
@@ -130,31 +139,41 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
     }
 
     /**
-     * Called via publishProgress() method in/during the doInBackground() execution thread
-     * @param values a java vararg. only past it a single Integer value ranging from 0-100 representing progress
+     * <b>DO NOT CALL THIS METHOD</b>
+     * Called via publishProgress() method in/during the doInBackground() execution thread. This executes on the main/GUI thread
+     * @param values is a java vararg. only pass it a single Integer value ranging from 0-100 representing progress
      */
     @Override
     protected void onProgressUpdate(Integer... values){
         progressDialog.setProgressBar(values[0]);
     }
 
-
+    /**
+     * <b>DO NOT CALL THIS METHOD DIRECTLY</b> It is invoked when the doInBackbround method/thread finishes execution
+     * @param result just a void
+     */
     protected void onPostExecute(Void result){
         progressDialog.dismiss();
+
+        CharSequence text = tmpContext.getText(R.string.export_toast);
+        Toast toast = Toast.makeText(tmpContext, text, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.BOTTOM, 0, 0);
+        toast.show();
+
         tmpContext= null;
 
         //return true;
     }
 
     /**
-     * Called when the user triggered a cancel() event on the AsyncTask instance.
+     * Called when the user triggered a cancel() event on the FileManager/AsyncTask instance.
      */
     protected void onCancelled(){
         tmpContext=null;
     }
 
     /**
-     * Makes copy of a raw audio file in the .wav format. Is placed in the same directory as the raw file.
+     * Makes copy of a raw audio file in the .wav format. Is placed in the ringtones directory.
      *
      * @param rawAudioFile The File object representing the raw file you want to convert
      * @return File object representing the wav file.
@@ -198,7 +217,7 @@ public class FileManager extends AsyncTask<Object, Integer, Void> {
         File garbleMeDirectory;
         if(Environment.MEDIA_MOUNTED.equals(stringState)) { //checks if we can access the SD
 
-            path = (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsoluteFile()); //returns the path of the Android Music Dir
+            path = (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES).getAbsoluteFile()); //returns the path of the Android Music Dir
 
             garbleMeDirectory = new File(path, "GarbleMe"); //A folder in the Android Music dir to put the wav files
             if (!garbleMeDirectory.exists()) {  //create Dir if it doesn't exist
