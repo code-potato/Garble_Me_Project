@@ -105,10 +105,8 @@ public class EffectsConfigScr extends Activity {
         }
     }
 
-    /**
-     * Function for constructing the audio player bar
-     */
-    public void initAudioPlayerBar() {
+    // Function for constructing the audio player bar
+    private void initAudioPlayerBar() {
         // SeekBar for the audio player
         audioPlayerBar = (SeekBar) findViewById(R.id.audioPlayerBar);
         audioPlayerBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -172,12 +170,8 @@ public class EffectsConfigScr extends Activity {
         }
     }//onActivityResult
 
-    /**
-     * Function for creating dynamic buttons
-     *
-     * @param intent
-     */
-    public void createButtons(Intent intent) {
+    // Function for creating dynamic buttons
+    private void createButtons(Intent intent) {
         final int effectID = Integer.parseInt(intent.getStringExtra("AudioEffectID"));
         Log.d(InitialScr.LOG_TAG, "Added AudioEffectID: " + intent.getStringExtra("AudioEffectID"));
         String effectName = audioController.getEffect(effectID).getName();
@@ -290,18 +284,14 @@ public class EffectsConfigScr extends Activity {
         }
     }
 
-    /**
-     * Start playing the audio file
-     */
-    public void startPlayingAudio() {
+    // Start playing the audio file
+    private void startPlayingAudio() {
         audioController.play();
         myHandler.postDelayed(updateAudioPlayerBar, 5);
     }
 
-    /**
-     * Stop playing the audio file
-     */
-    public void stopPlayingAudio() {
+    // Stop playing the audio file
+    private void stopPlayingAudio() {
         audioController.pause();
         myHandler.removeCallbacks(updateAudioPlayerBar); //stops the seekBar update
     }
