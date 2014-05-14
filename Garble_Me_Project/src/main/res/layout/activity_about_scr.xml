@@ -1,56 +1,40 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:paddingLeft="@dimen/activity_horizontal_margin"
-             android:paddingRight="@dimen/activity_horizontal_margin"
-             android:paddingTop="@dimen/activity_vertical_margin"
-             android:paddingBottom="@dimen/activity_vertical_margin"
-             tools:context="com.codepotato.view.AboutScr">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.codepotato.view.AboutScr">
 
     <TextView android:text="@string/about" android:layout_width="wrap_content" android:layout_height="wrap_content"
               android:textSize="32dp"
-              android:id="@+id/about" android:background="#faf8ff" android:textColor="#2315ff"
-              android:textStyle="bold" android:layout_alignParentTop="true"
-              android:editable="false"
-              android:gravity="center"/>
-    <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/team"
-                android:text="@string/the_team"
-                android:textColor="#1f07ff"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:gravity="top"
-                android:layout_below="@+id/about"/>
-    </TableRow>
-    <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/purpose"
-                android:text="@string/purpose"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="#1f07ff"
-                android:editable="false"
-                android:scrollHorizontally="false"/>
-    </TableRow>
-    <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/licenses"
-                android:text="@string/license"
-                android:gravity="bottom" android:textColor="#1f07ff"
-                android:editable="false"/>
-    </TableRow>
+              android:id="@+id/textView" android:background="#faf8ff" android:textColor="#2315ff"
+              android:textStyle="bold" android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/purpose"
+            android:id="@+id/textView3"
+            android:textColor="#1f07ff"
+            android:inputType="none" android:gravity="center"
+            android:layout_below="@+id/textView2" android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/license"
+              android:id="@+id/textView5" android:gravity="center_horizontal" android:textColor="#1f07ff"
+              android:layout_below="@+id/textView3" android:layout_alignParentEnd="true"
+              android:layout_marginTop="20dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/the_team"
+            android:id="@+id/textView2"
+            android:textColor="#1f07ff"
+            android:gravity="center_horizontal" android:layout_below="@+id/textView"
+            android:layout_alignParentEnd="true" android:layout_marginTop="20dp"/>
 
-</TableLayout>
+</RelativeLayout>
