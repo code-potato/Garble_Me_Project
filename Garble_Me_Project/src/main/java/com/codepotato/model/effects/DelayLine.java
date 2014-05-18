@@ -3,7 +3,9 @@ package com.codepotato.model.effects;
 import android.util.Log;
 
 /**
- * Created by michael on 3/18/14.
+ * @author Michael Santer
+ * The basic unit for the delay.
+ * Saves audio samples into a buffer for later playback.
  */
 public class DelayLine
 {
@@ -44,6 +46,12 @@ public class DelayLine
         return currentDelay;
     }
 
+    /**
+     * @return
+     * Returns current output sample, based on the delay length.
+     * If current playback index is 300, and the delay is 200, then return the
+     * sample stored at index 100.
+     */
     public double getCurrentOut()
     {
         double delayIndex;
@@ -69,6 +77,12 @@ public class DelayLine
         return output;
     }
 
+
+    /**
+     * Saves input sample into buffer, and returns the current output sample.
+     * @param input
+     * @return current output sample
+     */
     public double tick(double input)
     {
         double output;

@@ -1,7 +1,11 @@
 package com.codepotato.model.effects;
 
 /**
- * Created by michael on 4/1/14.
+ * @author Michael Santer
+ * Delay is the elementary unit for all of the time based effects.
+ * It is an effect that, basically, saves samples for later playback.
+ * Depending on the delay amount, it will playback the current input sound along with
+ * a sound that was previously played and stored.
  */
 public class Delay {
 
@@ -10,23 +14,41 @@ public class Delay {
     private double dryGain;
     private double feedbackGain;
 
+    /**
+     * Sets the amount of Delay, in samples.
+     * @param inDelay
+     */
     public Delay(int inDelay)
     {
         delayBuf = new DelayLine(inDelay);
     }
 
+    /**
+     * Change the delay amount.
+     * Less efficient than setDelayLineDelay()
+     * Use this method if the delay needs to be increased by more than double.
+     * @param newDelay number of samples
+     */
     public void setDelayAmt(double newDelay)
     {
         delayBuf = new DelayLine((int)(newDelay * 2));
         delayBuf.setDelayLineDelay(newDelay);
     }
 
+    /**
+     * Changes the delay amount.
+     * More efficient than setDelayAmt().
+     * Use this method if the delay needs to be increased by less than double.
+     * @param newDelay
+     */
     public void setDelayLineDelay(double newDelay)
     {
         delayBuf.setDelayLineDelay(newDelay);
     }
 
-
+    /**
+     * @return delay amount in samples.
+     */
     public double getDelay()
     {
         return delayBuf.getDelayLineDelay();
@@ -63,6 +85,14 @@ public class Delay {
     }
 
 
+    /**
+     * Given an audio sample as input, it combines
+     * the input*drygain with the previous echo*feedbackGain
+     * and the current echo*wetgain.
+     * This creates a basic echo effect.
+     * @param input
+     * @return the affected sample.
+     */
     public double tick(double input)
     {
         double output;

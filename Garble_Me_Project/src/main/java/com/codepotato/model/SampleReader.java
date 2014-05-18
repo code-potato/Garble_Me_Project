@@ -6,7 +6,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
- * Created by michael on 4/17/14.
+ * @author Michael Santer
+ *
+ * SampleReader is responsible for reading data from an audio file
+ * in the form of samples (type double).
+ * Used by Player.
  */
 public class SampleReader
 {
@@ -21,6 +25,14 @@ public class SampleReader
     private byte[] byteBuff;
     private long position;
 
+    /**
+     * Constructor opens an audio file for reading.
+     * @param file an audio file.
+     * @param sampleRate in Hz
+     * @param bitRate 8 or 16
+     * @param numChan 1 or 2
+     * @throws IOException
+     */
     public SampleReader (File file, int sampleRate, int bitRate, int numChan) throws IOException
     {
         audioFile = file;
@@ -37,14 +49,28 @@ public class SampleReader
         byteBuff = new byte[2];
     }
 
+    /**
+     * @return length of audio file in bytes
+     */
     public long length() {
         return audioFile.length();
     }
 
+    /**
+     *
+     * @return number of available bytes to read.
+     * @throws IOException
+     */
     public int available() throws IOException {
         return inputStream.available();
     }
 
+    /**
+     *
+     * @return
+     * The next available sample. If no samples are available, it returns 0.
+     * @throws IOException
+     */
     public double nextSample() throws IOException
     {
         if (inputStream.available() > 0){
@@ -74,6 +100,9 @@ public class SampleReader
     /**
      * Converts sample of type double into 2 bytes,
      * and stores into the byte buffer starting at the given offset.
+     * @param sample audio sample of type double
+     * @param buff an array of bytes
+     * @param offset the offset of the buffer to write to.
      */
     public void sampleToBytes(double sample, byte[] buff, int offset)
     {
@@ -83,6 +112,11 @@ public class SampleReader
         buff[offset + 0] = (byte) (nsample & 0xFF);        //isolate the low byte with MASK
     }
 
+    /**
+     * Moves the read position to a given offset in bytes.
+     * @param offset
+     * @throws IOException
+     */
     public void seek(long offset) throws IOException {
         /* note this may not be the most effecient way to do this */
 
@@ -98,6 +132,10 @@ public class SampleReader
         position = offset;
     }
 
+    /**
+     *
+     * @return the current position in bytes.
+     */
     public long getPosition(){
         return position;
     }

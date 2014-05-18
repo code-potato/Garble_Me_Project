@@ -8,7 +8,11 @@ import android.util.Log;
 import java.io.File;
 import java.io.IOException;
 
-
+/**
+ * @author Michael Santer
+ * Player is responsible for controlling playback of an audiofile. It contains an instance of
+ * the EffectChain so that effects can be applied during playback.
+ */
 public class Player implements Runnable{
     private boolean isPlaying;
     private int buff_size; //determined at runtime based on hardware, sample rate, channelConfig, audioFormat
@@ -24,6 +28,14 @@ public class Player implements Runnable{
     private static final String LOG_TAG= "XPlayer";
 
 
+    /**
+     *
+     * @param audioFile
+     * Given an audio file, of type File, the constructor initializes a new sampleReader
+     * for reading the file, a new AudioTrack for playback, and gets the current instance of
+     * the EffectChain.
+     * @throws IOException
+     */
     public Player(File audioFile) throws IOException {
 
         isPlaying = false;
@@ -42,10 +54,20 @@ public class Player implements Runnable{
         effectChain = EffectChainFactory.initEffectChain();
     }
 
+    /**
+     * @return
+     * True if audio is playing, false if it is not playing.
+     */
     public boolean isPlaying(){
         return isPlaying;
     }
 
+    /**
+     * Tells the player to start playing. This automatically spawns a new thread.
+     * play() calls run() to start playback in a new thread. During playback this method
+     * reads a sample from SampleReader, runs that sample through the effect chain, then
+     * writes it to the AudioTrack for plaback.
+     */
     public void play() {
         // create and run new thread for playback
         audioThread= new Thread(this, "Player: Audio Playback Thread");
@@ -54,7 +76,12 @@ public class Player implements Runnable{
 
     @Override
     /**
+     *
      * This code runs in it's own thread.
+     * Do not call this method directly, it is used by the play method.
+     * play() calls run() to start playback in a new thread. During playback this method
+     * reads a sample from SampleReader, runs that sample through the effect chain, then
+     * writes it to the AudioTrack for plaback.
      */
     public void run() {
         Log.d("player", "play");
@@ -100,6 +127,10 @@ public class Player implements Runnable{
         }
     }
 
+    /**
+     * Stops playback, while maintaining the current playback position.
+     * Kills the thread that was started by play().
+     */
     public void pause() {
         Log.d("player", "pause");
 
@@ -111,21 +142,31 @@ public class Player implements Runnable{
         audioThread = null;
     }
 
-    // offset should be between 0 and 100
+    /**
+     *
+     * @param location
+     * Given a location between 0 and 100 %, seek() will move playback
+     * to the appropriate position in the audio file.
+     * @throws IOException
+     */
     public void seek(int location) throws IOException {
         long offset = (long) (sampleReader.length() * (location/100.));
         sampleReader.seek(offset);
         track.flush();
     }
 
+    /**
+     * A convenience method that returns the playback to the beginning.
+     * @throws IOException
+     */
     public void seekToBeginning() throws IOException {
         sampleReader.seek(0);
         track.flush();
     }
 
     /**
-     * Returns length of current audio track in seconds
      * @return
+     * Total length of current audio track in seconds.
      */
     public int audioLength(){
         return Math.round(sampleReader.length() / 2 / 44100);

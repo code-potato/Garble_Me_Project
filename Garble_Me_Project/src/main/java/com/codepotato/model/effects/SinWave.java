@@ -1,7 +1,10 @@
 package com.codepotato.model.effects;
 
 /**
- * Created by michael on 4/17/14.
+ * @author Michael Santer
+ * SinWave allows for the stepping through of sin wave.
+ * Used by chorus and flanger to alternate delay time.
+ * This could also be used to generate a sin wave tone.
  */
 class SinWave {
 
@@ -53,6 +56,9 @@ class SinWave {
         sampleRate = sr;
     }
 
+    /**
+     * @return the next sin wav value.
+     */
     double tick(){
         out = Math.sin(2.*3.14*frequency*((double)currTimeIndex/sampleRate) + initialPhase);
         currTimeIndex++;
