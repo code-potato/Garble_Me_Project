@@ -345,7 +345,9 @@ public class EffectsConfigScr extends Activity {
         this.finish();
     }
 
-    // A seekBar thread for updating the AudioPlayerBar.
+    /**
+     * A seekBar thread for updating the AudioPlayerBar.
+     */
     private Runnable updateAudioPlayerBar = new Runnable() {
 
         @Override
