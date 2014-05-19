@@ -4,7 +4,10 @@ import com.codepotato.model.effects.*;
 import java.util.*;
 
 /**
- * Created by David on 4/16/2014.
+ * Maintains the list of audio effects being applied to the recording
+ *
+ * @author David Hua on 4/16/2014
+ *
  */
 
 public class EffectChain {
@@ -22,6 +25,10 @@ public class EffectChain {
         return numOfEffects;
     }
 
+    /**
+     * @param eff The effect being added to the list of effects in EffectChain
+     * @return int, effect's ID used in view manipulation (displaying what effects exist)
+     */
     public int addEffect(Effect eff){ //to end of array list
         eff.setId(id_count);  //effect ids are arbitrary as long as each effect has a unique id
         effectList.add(eff);
@@ -32,7 +39,10 @@ public class EffectChain {
         return eff.getId();
     }
 
-    //RETURN TYPE: boolean, used to check if effect ID was removed or not
+    /**
+     * @param effID The ID of the effect being removed from EffectChain
+     * @return boolean, used to check if effect ID was removed or not
+     */
     public boolean removeEffect (int effID){
 
         boolean idFound = false; //check for exception (id does not exist)
@@ -50,18 +60,12 @@ public class EffectChain {
         return idFound;
     }
 
-    /* this remove function is for manually deleting an effect from its index in list
-    public void removeEffect (int index){
-        if(index >= numOfEffects{
-            System.out.println("Error: Array out of bounds");
-        }
-        else{
-            effectList.remove(index); //remove()
-            numOfEffects--;
-        }
-    }
-
-    */
+    /**
+     * Gets an effect in EffectChain, given the effID
+     *
+     * @param effID The ID of the effect being
+     * @return Effect or null if not found
+     */
 
     public Effect getEffect(int effID){
 
@@ -75,26 +79,23 @@ public class EffectChain {
         return null;
     }
 
-    /*  this get function is for manually getting an effect from its index in list
-    public Effect getEffect(int index){
-        if(index >= numOfEffects){
-            //index over array size
-            System.out.println("Error: Trying to access index beyond number given.");
-            return null;
-        }
-
-        else {
-            return effectList.get(index);
-        }
-    }
-    */
-
+    /**
+     * Deletes all effects in EffectChain
+     */
     public void deleteAllEffects(){
         for(Effect eff : effectList){
             removeEffect(eff.getId());
         }
     }
 
+    /**
+     * Ticks/applies all of the effects in EffectChain into the input
+     *
+     * @param input The input sample (a small section of the recording)
+     *		        which is modified by "ticking"/applying all of the effects
+     * 				in the EffectChain's list of effects
+     * @return input The same input sample, but modified after going through here
+     */
     public double tickAll(double input) {
         for(Effect eff : effectList){
             input = eff.tick(input);
