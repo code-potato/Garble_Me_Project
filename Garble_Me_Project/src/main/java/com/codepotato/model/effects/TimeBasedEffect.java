@@ -1,14 +1,14 @@
 package com.codepotato.model.effects;
 
 /**
- * @author Michael Santer
  * TimeBasedEffect is an abstract base class for any effect that can be
  * considered "time based".
  * Time based effects all require a delay as an elementary component.
+ *
+ * @author Michael Santer
  * @see EchoEffect, ChorusEffect, and FlangerEffect
  */
-abstract public class TimeBasedEffect extends Effect
-{
+abstract public class TimeBasedEffect extends Effect {
     protected Delay delay;
     protected double delayTime; // in milliseconds
 
@@ -23,8 +23,8 @@ abstract public class TimeBasedEffect extends Effect
     /**
      * Delay time is the amount of time between echos.
      * The Max Delay Time is 1000ms.
-     * @return
-     * Delay time as a percent of the MAX_DELAY_TIME from 0 - 100.
+     *
+     * @return Delay time as a percent of the MAX_DELAY_TIME from 0 - 100.
      */
     public int getDelayTime() {
         return (int) (delayTime / MAX_DELAY_TIME * 100);
@@ -34,16 +34,18 @@ abstract public class TimeBasedEffect extends Effect
      * Delay time is the amount of time between echos.
      * The Max Delay Time is 1000ms.
      * Given a percent from 0-100, sets the delay time.
+     *
      * @param percent
      */
     public void setDelayTime(int percent) {
-        delayTime = MAX_DELAY_TIME * (double)percent / 100.;
+        delayTime = MAX_DELAY_TIME * (double) percent / 100.;
         delaySamples = convertMilliSecsToSamples(this.delayTime);
         delay.setDelayAmt(delaySamples);
     }
 
     /**
      * Wet Gain is the volume of the affected sound.
+     *
      * @return as a percent from 0-100 of the MaxGain
      */
     public int getWetGain() {
@@ -53,15 +55,17 @@ abstract public class TimeBasedEffect extends Effect
     /**
      * Wet Gain is the volume of the affected sound.
      * Set wetGain given a percent from 0-100
+     *
      * @param percent
      */
     public void setWetGain(int percent) {
-        wetGain = MAX_GAIN * (double)percent / 100.;
+        wetGain = MAX_GAIN * (double) percent / 100.;
         delay.setWetGain(this.wetGain);
     }
 
     /**
      * Dry gain is the volume of the un-affected (original) sound.
+     *
      * @return dry gain as a percent from 0-100 of the MaxGain
      */
     public int getDryGain() {
@@ -71,10 +75,11 @@ abstract public class TimeBasedEffect extends Effect
     /**
      * Dry gain is the volume of the un-affected (original) sound.
      * Set dryGain given a percent from 0-100
+     *
      * @param percent
      */
     public void setDryGain(int percent) {
-        dryGain = MAX_GAIN * (double)percent / 100.;
+        dryGain = MAX_GAIN * (double) percent / 100.;
         delay.setDryGain(this.dryGain);
     }
 
@@ -83,6 +88,7 @@ abstract public class TimeBasedEffect extends Effect
      * gets quieter and disappears. With a feedback gain of 0, there
      * will be no repeats of the effected sound. With a feedback gain of 100,
      * the effected sound will repeat forever.
+     *
      * @return feedbackGain as a percent of the MaxGain
      */
     public int getFeedbackGain() {
@@ -95,15 +101,15 @@ abstract public class TimeBasedEffect extends Effect
      * will be no repeats of the effected sound. With a feedback gain of 100,
      * the effected sound will repeat forever.
      * Set feedback given a percent from 0-100 of the MaxGain
+     *
      * @param percent
      */
     public void setFeedbackGain(int percent) {
-        feedbackGain = MAX_GAIN * (double)percent / 100.;
+        feedbackGain = MAX_GAIN * (double) percent / 100.;
         delay.setFeedbackGain(this.feedbackGain);
     }
 
-    protected int convertMilliSecsToSamples(double milliSecs)
-    {
+    protected int convertMilliSecsToSamples(double milliSecs) {
         return (int) (milliSecs * sampleRate / 1000);
     }
 }

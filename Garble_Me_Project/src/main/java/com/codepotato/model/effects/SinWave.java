@@ -1,10 +1,11 @@
 package com.codepotato.model.effects;
 
 /**
- * @author Michael Santer
  * SinWave allows for the stepping through of sin wave.
  * Used by chorus and flanger to alternate delay time.
  * This could also be used to generate a sin wave tone.
+ *
+ * @author Michael Santer
  */
 class SinWave {
 
@@ -15,52 +16,52 @@ class SinWave {
 
     double out; // declared as instance variable for efficiency.
 
-    public SinWave(){
+    public SinWave() {
         currTimeIndex = 0;
         frequency = 440;
         initialPhase = 0;
         sampleRate = 44100;
     }
 
-    SinWave(double freq){
+    SinWave(double freq) {
         currTimeIndex = 0;
         frequency = freq;
         initialPhase = 0;
         sampleRate = 44100;
     }
 
-    SinWave(double freq, double initPhase, double sr){
+    SinWave(double freq, double initPhase, double sr) {
         currTimeIndex = 0;
         frequency = freq;
         initialPhase = initPhase;
         sampleRate = sr;
     }
 
-    void setSinFreq(double freq){
+    void setSinFreq(double freq) {
         frequency = freq;
     }
 
-    double getSinFreq(){
+    double getSinFreq() {
         return frequency;
     }
 
-    void setSinInitPhase(double phase){
+    void setSinInitPhase(double phase) {
         initialPhase = phase;
     }
 
-    double getSinInitPhase(){
+    double getSinInitPhase() {
         return initialPhase;
     }
 
-    void setSampleRate(double sr){
+    void setSampleRate(double sr) {
         sampleRate = sr;
     }
 
     /**
      * @return the next sin wav value.
      */
-    double tick(){
-        out = Math.sin(2.*3.14*frequency*((double)currTimeIndex/sampleRate) + initialPhase);
+    double tick() {
+        out = Math.sin(2. * 3.14 * frequency * ((double) currTimeIndex / sampleRate) + initialPhase);
         currTimeIndex++;
         return out;
     }

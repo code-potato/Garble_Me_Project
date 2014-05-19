@@ -3,14 +3,14 @@ package com.codepotato.model.effects;
 import android.util.Log;
 
 /**
- * @author Michael Santer
  * Flanger is a very short delay, usually less than 15ms. Just like Chorus,
  * the delay fluctuates up and down on a sin wave pattern. When this is done
  * with such a short delay, it creates what some people call the "airplane" effect.
  * It can also create a sort of robotic sound.
+ *
+ * @author Michael Santer
  */
-public class FlangerEffect extends TimeBasedEffect
-{
+public class FlangerEffect extends TimeBasedEffect {
     private SinWave sin;
     private double minDelay;
     private double depth;
@@ -25,8 +25,7 @@ public class FlangerEffect extends TimeBasedEffect
      * Initialize effect with a set of default parameters.
      * These parameters can be retrieved using the get methods.
      */
-    public FlangerEffect()
-    {
+    public FlangerEffect() {
         name = "Flanger";
         rate = 1;
         depth = 5.;
@@ -44,7 +43,7 @@ public class FlangerEffect extends TimeBasedEffect
         delay.setWetGain(wetGain);
         delay.setFeedbackGain(feedbackGain);
 
-        sin = new SinWave(rate, Math.PI/2., sampleRate);
+        sin = new SinWave(rate, Math.PI / 2., sampleRate);
     }
 
     @Override
@@ -53,46 +52,44 @@ public class FlangerEffect extends TimeBasedEffect
      * tick() method on Delay.
      */
     public double tick(double inputSample) {
-        tempDelay = depth/2. * (sin.tick() + 1.) + minDelay;
+        tempDelay = depth / 2. * (sin.tick() + 1.) + minDelay;
         delay.setDelayLineDelay(tempDelay * sampleRate / 1000.);
         return delay.tick(inputSample);
     }
 
     /**
-     *
      * @return depth as a percent of max depth
      */
     public int getDepth() {
-        return (int) (depth/MAX_DEPTH*100);
+        return (int) (depth / MAX_DEPTH * 100);
     }
 
     /**
      * Depth represents the amount in which the delay changes.
      * Ex: If depth is 10, the delay will fluctuate between 0ms and 10ms.
-     * @param percent
-     * Set depth as a percent from 0-100 of max Depth.
-     * Max Depth is 50.
+     *
+     * @param percent Set depth as a percent from 0-100 of max Depth.
+     *                Max Depth is 50.
      */
     public void setDepth(int percent) {
-        depth = MAX_DEPTH * (double)percent / 100.;
+        depth = MAX_DEPTH * (double) percent / 100.;
     }
 
     /**
-     *
      * @return rate as a percent of max rate.
      */
     public int getRate() {
-        return (int) (rate/MAX_RATE*100);
+        return (int) (rate / MAX_RATE * 100);
     }
 
     /**
      * Rate represents the frequency in which the delay is changed (fast or slow).
-     * @param percent
-     * Set rate as a percent from 0-100 of max rate.
-     * Max rate is 5.
+     *
+     * @param percent Set rate as a percent from 0-100 of max rate.
+     *                Max rate is 5.
      */
     public void setRate(int percent) {
-        rate = MAX_RATE * (double)percent / 100.;
+        rate = MAX_RATE * (double) percent / 100.;
         sin.setSinFreq(rate);
         Log.d("Flange", "rate = " + rate);
     }

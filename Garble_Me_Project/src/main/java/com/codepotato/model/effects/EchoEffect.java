@@ -1,21 +1,20 @@
 package com.codepotato.model.effects;
 
 /**
- * @author Michael Santer
  * EchoEffect class is a user friendly wrapper for Delay.
  * It is an effect that, basically, saves samples for later playback.
  * Depending on the delay amount, it will playback the current input sound along with
  * a sound that was previously played and stored.
+ *
+ * @author Michael Santer
  */
 
-public class EchoEffect extends TimeBasedEffect
-{
+public class EchoEffect extends TimeBasedEffect {
     /**
      * Initialize effect with a set of default parameters.
      * These parameters can be retrieved using the get methods.
      */
-    public EchoEffect()
-    {
+    public EchoEffect() {
         name = "Echo";
 
         delayTime = 200;
@@ -36,11 +35,11 @@ public class EchoEffect extends TimeBasedEffect
      * the input*drygain with the previous echo*feedbackGain
      * and the current echo*wetgain.
      * This creates a basic echo effect.
+     *
      * @param input sample.
      * @return affected audio sample.
      */
-    public double tick(double input)
-    {
+    public double tick(double input) {
         return delay.tick(input);
     }
 }

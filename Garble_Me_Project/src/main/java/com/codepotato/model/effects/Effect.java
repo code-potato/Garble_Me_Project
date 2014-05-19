@@ -1,9 +1,10 @@
 package com.codepotato.model.effects;
 
 /**
- * @author Michael Santer
  * Abstract base class for all effects.
  * All effects must have a tick method and an id.
+ *
+ * @author Michael Santer
  */
 public abstract class Effect {
 
@@ -23,6 +24,7 @@ public abstract class Effect {
     /**
      * Given an audio sample, tick should make the appropriate
      * changes (depending on the effect) to the sample, and return it.
+     *
      * @param inputSample
      * @return
      */
