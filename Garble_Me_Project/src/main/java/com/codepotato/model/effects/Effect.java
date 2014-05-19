@@ -21,13 +21,6 @@ public abstract class Effect {
         this.id = id;
     }
 
-    /**
-     * Given an audio sample, tick should make the appropriate
-     * changes (depending on the effect) to the sample, and return it.
-     *
-     * @param inputSample
-     * @return
-     */
     public abstract double tick(double inputSample);
 
     public String getName() {
