@@ -21,6 +21,8 @@ import java.util.HashMap;
 
 /**
  * Activity for setting parameters for a specific effect
+ *
+ * @author Terry C. Wong
  */
 public class EffectSettingsScr extends Activity {
     private Spinner spinner;

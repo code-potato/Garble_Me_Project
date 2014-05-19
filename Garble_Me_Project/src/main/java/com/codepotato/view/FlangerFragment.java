@@ -12,7 +12,7 @@ import com.codepotato.model.effects.FlangerEffect;
 
 /**
  * Fragment for the Flanger item on drop-down menu
- * Created by terrywong on 4/25/14.
+ * Created by Terry C. Wong on 4/25/14.
  */
 public class FlangerFragment extends Fragment {
     private FlangerEffect effect;

@@ -18,6 +18,8 @@ import java.util.HashMap;
  * Activity for:
  * adding/removing effects to an audio file;
  * playback of the audio file;
+ *
+ * @author Terry C. Wong
  */
 public class EffectsConfigScr extends Activity {
     private static final String LOGTAG = "CodePotatoEffectsConfigScr";

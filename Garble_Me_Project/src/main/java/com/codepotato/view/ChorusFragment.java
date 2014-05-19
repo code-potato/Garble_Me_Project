@@ -11,7 +11,7 @@ import com.codepotato.model.effects.Effect;
 
 /**
  * Fragment for the Chorus item on drop-down menu
- * Created by terrywong on 4/24/14.
+ * Created by Terry C. Wong on 4/24/14.
  */
 public class ChorusFragment extends Fragment {
     private ChorusEffect effect;
