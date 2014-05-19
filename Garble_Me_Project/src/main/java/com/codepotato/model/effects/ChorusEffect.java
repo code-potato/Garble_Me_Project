@@ -43,11 +43,11 @@ public class ChorusEffect extends TimeBasedEffect {
         sin = new SinWave(rate, Math.PI / 2., sampleRate);
     }
 
-    @Override
     /**
      * Changes the delay based on rate and depth, and then calls the
      * tick() method on Delay.
      */
+    @Override
     public double tick(double inputSample) {
         tempDelay = depth / 2. * (sin.tick() + 1.) + minDelay;
         delay.setDelayLineDelay(tempDelay * sampleRate / 1000.);

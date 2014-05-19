@@ -39,6 +39,7 @@ public class EchoEffect extends TimeBasedEffect {
      * @param input sample.
      * @return affected audio sample.
      */
+    @Override
     public double tick(double input) {
         return delay.tick(input);
     }
